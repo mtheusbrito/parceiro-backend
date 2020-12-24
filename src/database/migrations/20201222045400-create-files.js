@@ -9,8 +9,10 @@ module.exports = {
       },
       name: { type: Sequelize.STRING, allowNull: false },
       path: { type: Sequelize.STRING, allowNull: false, unique: true },
+
       created_at: { type: Sequelize.DATE, allowNull: false },
       updated_at: { type: Sequelize.DATE, allowNull: false },
+      deleted_at: { type: Sequelize.DATE, allowNull: true },
     }),
   /**
    * Add altering commands here.

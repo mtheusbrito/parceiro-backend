@@ -18,6 +18,8 @@ routes.post('/sessions', SessionController.store);
 routes.use(authMiddleware);
 
 routes.put('/users', UserController.update);
+routes.get('/users', UserController.index);
+routes.delete('/users/:id', UserController.destroy);
 // routes.post('/files', upload.single('file'));
 routes.post('/files', upload.single('file'), FileController.store);
 

@@ -1,14 +1,30 @@
 import * as Yup from 'yup';
 import User from '../models/User';
+import File from '../models/File';
 
 class UserController {
+  async index(req, res) {
+    const users = await User.findAll({
+      include: { model: File, as: 'avatar' },
+    });
+    return res.json(users);
+  }
+
+  async destroy(req, res) {
+    const user_exist = await User.findByPk(req.params.id);
+    if (!user_exist) {
+      return res.status(400).json({ error: 'User not exists. ' });
+    }
+    await user_exist.destroy();
+    return res.status(204).send();
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().email().required(),
       password: Yup.string().required().min(6),
     });
-
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validadion fails' });
     }
