@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
-import User from '../models/User';
-import File from '../models/File';
+import User from '../../models/User';
+import File from '../../models/File';
 
 class UserController {
   async index(req, res) {
@@ -22,8 +22,11 @@ class UserController {
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
+      login: Yup.string().required(),
       email: Yup.string().email().required(),
       password: Yup.string().required().min(6),
+      ativo: Yup.boolean().required(),
+      admin: Yup.boolean().required(),
     });
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validadion fails' });
@@ -32,53 +35,51 @@ class UserController {
     if (user_exist) {
       return res.status(400).json({ error: 'User already exists. ' });
     }
-    const { id, name, email, provider } = await User.create(req.body);
-    return res.json({ id, name, email, provider });
+    const { id, name, login, email, admin, ativo } = await User.create(
+      req.body
+    );
+    return res.json({ id, name, login, email, admin, ativo });
   }
 
   async update(req, res) {
+    const user = await User.findByPk(req.userId);
+    if (!user.admin) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
     const schema = Yup.object().shape({
+      id: Yup.number().required(),
       name: Yup.string(),
+      login: Yup.string().required(),
       email: Yup.string().email().required(),
-      oldPassword: Yup.string().min(6),
-      password: Yup.string()
-        .min(6)
-        .when('oldPassword', (oldPassword, field) =>
-          oldPassword ? field.required() : field
-        ),
-      confirmPassword: Yup.string()
-        .min(6)
-        .when('password', (password, field) =>
-          password ? field.required().oneOf([Yup.ref('password')]) : field
-        ),
+      password: Yup.string().min(6),
+      ativo: Yup.boolean().required(),
+      admin: Yup.boolean().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validadion fails' });
     }
 
-    const { email, oldPassword } = req.body;
-    const user = await User.findByPk(req.userId);
+    const { idUSer } = req.body.id;
 
-    if (email !== user.email) {
-      const user_exist = await User.findOne({
-        where: { email },
-      });
-      if (user_exist) {
-        return res.status(400).json({ error: 'User already exists. ' });
-      }
+    const user_database = await User.findOne({
+      where: { id: idUSer },
+    });
+    if (!user_database) {
+      return res.status(404).json({ error: 'User not exists. ' });
     }
 
-    if (oldPassword && !(await user.checkPassword(oldPassword))) {
-      return res.status(401).json({ error: 'Password does not macth' });
-    }
-    const { id, name, provider } = await user.update(req.body);
+    const { id, name, login, email, ativo, admin } = await user.update(
+      req.body
+    );
 
     return res.json({
       id,
       name,
+      login,
       email,
-      provider,
+      ativo,
+      admin,
     });
   }
 }

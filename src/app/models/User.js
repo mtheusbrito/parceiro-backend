@@ -6,10 +6,12 @@ class User extends Model {
     super.init(
       {
         name: Sequelize.STRING,
+        login: Sequelize.STRING,
         email: Sequelize.STRING,
         password: Sequelize.VIRTUAL,
         password_hash: Sequelize.STRING,
-        provider: Sequelize.BOOLEAN,
+        admin: Sequelize.BOOLEAN,
+        ativo: Sequelize.BOOLEAN,
       },
       {
         sequelize,

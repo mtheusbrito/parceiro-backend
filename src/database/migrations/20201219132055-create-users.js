@@ -8,12 +8,15 @@ module.exports = {
         primaryKey: true,
       },
       name: { type: Sequelize.STRING, allowNull: false },
+      login: { type: Sequelize.STRING, allowNull: false, unique: true },
+
       email: { type: Sequelize.STRING, allowNull: false, unique: true },
       password_hash: { type: Sequelize.STRING, allowNull: false },
+      ativo: { type: Sequelize.BOOLEAN, defaultValue: true, allowNull: false },
 
       // cliente pode ser o cliente ou prestador de servico
       // cliente: false, prestador: true
-      provider: {
+      admin: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
         allowNull: false,
