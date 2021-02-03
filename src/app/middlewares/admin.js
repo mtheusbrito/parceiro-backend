@@ -16,8 +16,8 @@ export default async (req, res, next) => {
     req.userAdmin = decoded.admin;
 
     const { admin } = decoded;
-    if (admin) {
-      return res.status(403).json({ error: 'Access denied!' });
+    if (!admin) {
+      return res.status(403).json({ error: 'Access Denied' });
     }
     return next();
   } catch (err) {

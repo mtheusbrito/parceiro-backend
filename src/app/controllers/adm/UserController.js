@@ -31,7 +31,7 @@ class UserController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validadion fails' });
     }
-    const user_exist = await User.findOne({ where: { email: req.body.email } });
+    const user_exist = await User.findOne({ where: { login: req.body.login } });
     if (user_exist) {
       return res.status(400).json({ error: 'User already exists. ' });
     }
@@ -42,10 +42,6 @@ class UserController {
   }
 
   async update(req, res) {
-    const user = await User.findByPk(req.userId);
-    if (!user.admin) {
-      return res.status(403).json({ error: 'Access denied' });
-    }
     const schema = Yup.object().shape({
       id: Yup.number().required(),
       name: Yup.string(),
@@ -60,13 +56,16 @@ class UserController {
       return res.status(400).json({ error: 'Validadion fails' });
     }
 
-    const { idUSer } = req.body.id;
+    const user = await User.findByPk(req.body.id);
 
-    const user_database = await User.findOne({
-      where: { id: idUSer },
-    });
-    if (!user_database) {
+    if (!user) {
       return res.status(404).json({ error: 'User not exists. ' });
+    }
+    const user_database = await User.findOne({
+      where: { login: req.body.login },
+    });
+    if (user_database) {
+      return res.status(404).json({ error: 'User login exists. ' });
     }
 
     const { id, name, login, email, ativo, admin } = await user.update(
