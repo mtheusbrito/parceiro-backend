@@ -10,7 +10,7 @@ module.exports = {
       name: { type: Sequelize.STRING, allowNull: false },
       login: { type: Sequelize.STRING, allowNull: false, unique: true },
 
-      email: { type: Sequelize.STRING, allowNull: false, unique: true },
+      email: { type: Sequelize.STRING, allowNull: false },
       password_hash: { type: Sequelize.STRING, allowNull: false },
       ativo: { type: Sequelize.BOOLEAN, defaultValue: true, allowNull: false },
 

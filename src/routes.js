@@ -12,7 +12,7 @@ const upload = multer(multerConfig);
 
 const routes = new Router();
 
-routes.get('/', (res) => res.json({ message: 'Hello Horld!' }));
+routes.get('/', (req, res) => res.json({ message: 'Hello my friend!' }));
 routes.post('/session', SessionController.store);
 // usuarioPadrao
 routes.post('/files', upload.single('file'), FileController.store);
