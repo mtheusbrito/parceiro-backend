@@ -13,18 +13,19 @@ const upload = multer(multerConfig);
 const routes = new Router();
 
 routes.get('/', (req, res) => res.json({ message: 'Hello my friend!' }));
-routes.post('/session', SessionController.store);
+
 // usuarioPadrao
 routes.post('/files', upload.single('file'), FileController.store);
-routes.use(authMiddleware);
 
-// routes.post('/files', upload.single('file'));
-
+routes.post('/files', upload.single('file'));
+routes.post('/session', SessionController.store);
 // admin
-routes.use(adminMidlware);
-routes.post('/adm/usuarios', UserAdmController.store);
-routes.put('/adm/usuarios', UserAdmController.update);
-routes.get('/adm/usuarios', UserAdmController.index);
-routes.delete('/adm/usuarios/:id', UserAdmController.destroy);
+routes.use('/adm', [adminMidlware]);
+routes.post('/adm/users', UserAdmController.store);
+routes.put('/adm/users', UserAdmController.update);
+routes.get('/adm/users', UserAdmController.index);
+routes.delete('/adm/users/:id', UserAdmController.destroy);
+
+routes.use('/', [authMiddleware]);
 
 export default routes;

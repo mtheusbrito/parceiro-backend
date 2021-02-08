@@ -15,7 +15,6 @@ class User extends Model {
       },
       {
         sequelize,
-        paranoid: true,
       }
     );
     this.addHook('beforeSave', async (user) => {

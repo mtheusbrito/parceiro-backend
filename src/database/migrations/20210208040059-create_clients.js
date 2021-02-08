@@ -1,6 +1,6 @@
 module.exports = {
-  up: async (queryInterface, Sequelize) =>
-    queryInterface.createTable('file', {
+  up: async (queryInterface, Sequelize) => {
+    queryInterface.createTable('client', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -8,17 +8,19 @@ module.exports = {
         primaryKey: true,
       },
       name: { type: Sequelize.STRING, allowNull: false },
-      path: { type: Sequelize.STRING, allowNull: false, unique: true },
+      company: { type: Sequelize.STRING, allowNull: false },
+      obs: { type: Sequelize.TEXT, allowNull: true },
+
+      cnpj: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
 
       created_at: { type: Sequelize.DATE, allowNull: false },
       updated_at: { type: Sequelize.DATE, allowNull: false },
       deleted_at: { type: Sequelize.DATE, allowNull: true },
-    }),
-  /**
-   * Add altering commands here.
-   *
-   * Example:
-   * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-   */
-  down: async (queryInterface) => queryInterface.dropTable('file'),
+    });
+  },
+
+  down: async (queryInterface) => queryInterface.dropTable('client'),
 };

@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) =>
-    queryInterface.createTable('users', {
+    queryInterface.createTable('user', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -8,6 +8,13 @@ module.exports = {
         primaryKey: true,
       },
       name: { type: Sequelize.STRING, allowNull: false },
+      cpf: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      rg: { type: Sequelize.STRING, allowNull: false },
+      phone: { type: Sequelize.STRING, allowNull: false },
+
       login: { type: Sequelize.STRING, allowNull: false, unique: true },
 
       email: { type: Sequelize.STRING, allowNull: false },
@@ -31,5 +38,5 @@ module.exports = {
    * Example:
    * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
    */
-  down: async (queryInterface) => queryInterface.dropTable('users'),
+  down: async (queryInterface) => queryInterface.dropTable('user'),
 };

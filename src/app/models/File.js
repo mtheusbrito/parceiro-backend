@@ -15,7 +15,6 @@ class File extends Model {
       },
       {
         sequelize,
-        paranoid: true,
       }
     );
     return this;

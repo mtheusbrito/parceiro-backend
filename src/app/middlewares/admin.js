@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
 import authConfig from '../../config/auth';
@@ -16,8 +17,9 @@ export default async (req, res, next) => {
     req.userAdmin = decoded.admin;
 
     const { admin } = decoded;
+
     if (!admin) {
-      return res.status(403).json({ error: 'Access Denied' });
+      return res.status(403).json({ error: `Access Denied` });
     }
     return next();
   } catch (err) {
