@@ -1,9 +1,25 @@
 import Sequelize from 'sequelize';
 import User from '../app/models/User';
 import File from '../app/models/File';
+import Client from '../app/models/Client';
+import Pix from '../app/models/Pix';
+import Address from '../app/models/Address';
+import AddressClient from '../app/models/AddressClient';
+import AddressUser from '../app/models/AddressUser';
+import BankAddress from '../app/models/BankAccount';
+
 import databaseConfig from '../config/database';
 
-const models = [User, File];
+const models = [
+  User,
+  File,
+  Client,
+  Address,
+  Pix,
+  AddressClient,
+  AddressUser,
+  BankAddress,
+];
 class Database {
   constructor() {
     this.init();
