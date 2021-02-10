@@ -1,22 +1,22 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    queryInterface.addColumn('address', 'state_registration', {
+    queryInterface.addColumn('addresses', 'state_registration', {
       type: Sequelize.STRING,
       allowNull: true,
     });
-    queryInterface.addColumn('address', 'complement', {
+    queryInterface.addColumn('addresses', 'complement', {
       type: Sequelize.STRING,
       allowNull: true,
     });
-    queryInterface.addColumn('address', 'google_maps', {
+    queryInterface.addColumn('addresses', 'google_maps', {
       type: Sequelize.STRING,
       allowNull: true,
     });
   },
 
   down: async (queryInterface) => {
-    queryInterface.removeColumn('address', 'state_registration');
-    queryInterface.removeColumn('address', 'complement');
-    queryInterface.removeColumn('address', 'google_maps');
+    queryInterface.removeColumn('addresses', 'state_registration');
+    queryInterface.removeColumn('addresses', 'complement');
+    queryInterface.removeColumn('addresses', 'google_maps');
   },
 };

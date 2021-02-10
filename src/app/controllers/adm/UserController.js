@@ -23,6 +23,9 @@ class UserController {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       login: Yup.string().required(),
+      cpf: Yup.string().required(),
+      rg: Yup.string().required(),
+      phone: Yup.string().required(),
       email: Yup.string().email().required(),
       password: Yup.string().required().min(6),
       ativo: Yup.boolean().required(),
@@ -35,10 +38,18 @@ class UserController {
     if (user_exist) {
       return res.status(400).json({ error: 'User already exists. ' });
     }
-    const { id, name, login, email, admin, ativo } = await User.create(
-      req.body
-    );
-    return res.json({ id, name, login, email, admin, ativo });
+    const {
+      id,
+      name,
+      login,
+      email,
+      cpf,
+      rg,
+      phone,
+      admin,
+      ativo,
+    } = await User.create(req.body);
+    return res.json({ id, name, login, email, cpf, rg, phone, admin, ativo });
   }
 
   async update(req, res) {
@@ -46,6 +57,9 @@ class UserController {
       id: Yup.number().required(),
       name: Yup.string(),
       login: Yup.string().required(),
+      cpf: Yup.string().required(),
+      rg: Yup.string().required(),
+      phone: Yup.string().required(),
       email: Yup.string().email().required(),
       password: Yup.string().min(6),
       ativo: Yup.boolean().required(),
@@ -68,17 +82,28 @@ class UserController {
       return res.status(404).json({ error: 'User login exists. ' });
     }
 
-    const { id, name, login, email, ativo, admin } = await user.update(
-      req.body
-    );
+    const {
+      id,
+      name,
+      login,
+      email,
+      cpf,
+      rg,
+      phone,
+      admin,
+      ativo,
+    } = await user.update(req.body);
 
     return res.json({
       id,
       name,
       login,
       email,
-      ativo,
+      cpf,
+      rg,
+      phone,
       admin,
+      ativo,
     });
   }
 }

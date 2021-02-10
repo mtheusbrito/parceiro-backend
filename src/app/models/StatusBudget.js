@@ -5,8 +5,8 @@ class StatusBudget extends Model {
     super.init(
       {
         name: Sequelize.STRING,
+        sequence: Sequelize.INTEGER,
         color: Sequelize.STRING,
-        order: Sequelize.INT,
       },
       {
         sequelize,

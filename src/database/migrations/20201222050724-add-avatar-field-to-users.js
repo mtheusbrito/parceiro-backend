@@ -1,11 +1,11 @@
 module.exports = {
   up: async (queryInterface, Sequelize) =>
     queryInterface.addColumn(
-      'user', // tabela na qual a coluna sera criada;
+      'users', // tabela na qual a coluna sera criada;
       'avatar_id', // nome da coluna a ser criada;
       {
         type: Sequelize.INTEGER,
-        references: { model: 'file', key: 'id' },
+        references: { model: 'files', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
         allowNull: true,
@@ -13,5 +13,5 @@ module.exports = {
     ),
 
   down: async (queryInterface) =>
-    queryInterface.removeColumn('user', 'avatar_id'),
+    queryInterface.removeColumn('users', 'avatar_id'),
 };

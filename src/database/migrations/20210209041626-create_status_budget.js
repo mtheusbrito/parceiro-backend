@@ -1,15 +1,16 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('status_budget', {
+    await queryInterface.createTable('status_budgets', {
       id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
       },
-      name: { allowNull: false, type: Sequelize.STRING },
-      order: { allowNull: false, type: Sequelize.INTEGER },
-      color: { allowNull: false, type: Sequelize.STRING },
+
+      name: { type: Sequelize.STRING, allowNull: false },
+      sequence: { type: Sequelize.INTEGER, allowNull: false },
+      color: { type: Sequelize.STRING, allowNull: false },
 
       deleted_at: { type: Sequelize.DATE, allowNull: true },
       created_at: { type: Sequelize.DATE, allowNull: false },
@@ -18,6 +19,6 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('status_budget');
+    await queryInterface.dropTable('status_budgets');
   },
 };
