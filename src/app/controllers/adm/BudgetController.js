@@ -4,10 +4,6 @@ import Budget from '../../models/Budget';
 import Client from '../../models/Client';
 import StatusBudget from '../../models/StatusBudget';
 import User from '../../models/User';
-// import Client from '../../models/Client';
-// import StatusBudget from '../../models/StatusBudget';
-// import Address from '../../models/Address';
-// import User from '../../models/User';
 
 class BudgetController {
   async index(req, res) {
@@ -59,12 +55,15 @@ class BudgetController {
     if (!address_database) {
       return res.status(400).json({ error: 'Este endereço não existe! ' });
     }
-    const budget = await Budget.create({
-      client_id,
-      user_id,
-      address_id,
-      status_budget_id,
-    });
+    const budget = await Budget.create(
+      {
+        client_id,
+        user_id,
+        address_id,
+        status_budget_id,
+      },
+      { include: [{ all: true }] }
+    );
     return res.json(budget);
   }
 
@@ -110,12 +109,15 @@ class BudgetController {
     if (!address_database) {
       return res.status(400).json({ error: 'Este endereço não existe! ' });
     }
-    const budget_response = await Budget.update({
-      client_id,
-      user_id,
-      address_id,
-      status_budget_id,
-    });
+    const budget_response = await Budget.update(
+      {
+        client_id,
+        user_id,
+        address_id,
+        status_budget_id,
+      },
+      { include: [{ all: true }] }
+    );
     return res.json(budget_response);
   }
 }

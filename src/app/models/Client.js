@@ -7,7 +7,7 @@ class Client extends Model {
         name: Sequelize.STRING,
         cnpj: Sequelize.STRING,
         obs: Sequelize.TEXT,
-        company: Sequelize.VIRTUAL,
+        company: Sequelize.STRING,
       },
       {
         sequelize,
@@ -18,10 +18,11 @@ class Client extends Model {
   }
 
   static associate(models) {
+    this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
     this.belongsToMany(models.Address, {
       through: 'AddressClient',
       foreignKey: 'client_id',
-      as: 'adresses',
+      as: 'addresses',
     });
   }
 }

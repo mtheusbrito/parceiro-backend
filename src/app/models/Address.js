@@ -17,5 +17,13 @@ class Address extends Model {
     );
     return this;
   }
+
+  // static associate(models) {
+  //   this.belongsToMany(models.Client, {
+  //     through: 'AddressClient',
+  //     foreignKey: 'client_id',
+  //     as: 'clients',
+  //   });
+  // }
 }
 export default Address;
