@@ -8,6 +8,7 @@ import authMiddleware from './app/middlewares/auth';
 import adminMidlware from './app/middlewares/admin';
 import multerConfig from './config/multer';
 import StatusBudgetController from './app/controllers/adm/StatusBudgetController';
+import BudgetController from './app/controllers/adm/BudgetController';
 
 const upload = multer(multerConfig);
 
@@ -30,6 +31,11 @@ routes.get('/adm/status-budgets', StatusBudgetController.index);
 routes.post('/adm/status-budgets', StatusBudgetController.store);
 routes.delete('/adm/status-budgets/:id', StatusBudgetController.destroy);
 routes.put('/adm/status-budgets', StatusBudgetController.update);
+
+routes.get('/adm/budgets', BudgetController.index);
+routes.post('/adm/budgets', BudgetController.store);
+routes.delete('/adm/budgets/:id', BudgetController.destroy);
+routes.put('/adm/budgets', BudgetController.update);
 
 routes.use('/', [authMiddleware]);
 
