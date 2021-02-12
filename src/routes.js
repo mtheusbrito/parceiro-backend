@@ -40,7 +40,7 @@ routes.put('/adm/budgets', BudgetController.update);
 
 routes.get('/adm/clients', ClientController.index);
 routes.post('/adm/clients', ClientController.store);
-// routes.put('/adm/clients', ClientController.store);
+routes.put('/adm/clients', ClientController.update);
 
 routes.use('/', [authMiddleware]);
 

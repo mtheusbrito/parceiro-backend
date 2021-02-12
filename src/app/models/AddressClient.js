@@ -15,7 +15,7 @@ class AddressClient extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.User, {
+    this.belongsTo(models.Client, {
       foreignKey: 'client_id',
     });
     this.belongsTo(models.Address, {
