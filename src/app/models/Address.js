@@ -18,12 +18,12 @@ class Address extends Model {
     return this;
   }
 
-  // static associate(models) {
-  //   this.belongsToMany(models.Client, {
-  //     through: 'AddressClient',
-  //     foreignKey: 'client_id',
-  //     as: 'clients',
-  //   });
-  // }
+  static associate(models) {
+    this.belongsToMany(models.Client, {
+      through: 'address_clients',
+      foreignKey: 'client_id',
+      as: 'clients',
+    });
+  }
 }
 export default Address;
