@@ -42,16 +42,18 @@ class ClientController {
     if (!user_database) {
       return res.status(404).json({ error: 'Este usuário não existe. ' });
     }
-    const { addresses } = req.body;
-    const client = await Client.create(req.body);
-
-    await Promise.all(
-      addresses.map(async (address) => {
-        const results = await Address.create(address);
-        const response = await client.addAddress(results);
-        return response;
-      })
-    );
+    // const { addresses } = req.body;
+    const client = await Client.create(req.body, {
+      include: { model: Address, as: 'addresses' },
+    });
+    // await client.addAddress();
+    // await Promise.all(
+    //   addresses.map(async (address) => {
+    //     const results = await Address.create(address);
+    //     const response = await client.addAddress(results);
+    //     return response;
+    //   })
+    // );
     return res.json(client);
   }
 
