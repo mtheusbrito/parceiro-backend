@@ -36,7 +36,7 @@ class ClientController {
     if (!user_database) {
       return res.status(404).json({ error: 'Este usuário não existe. ' });
     }
-    // const { addresses } = req.body;
+
     const client = await Client.create(req.body, {
       include: { model: Address, as: 'addresses' },
     });
@@ -81,7 +81,6 @@ class ClientController {
     if (!user_database) {
       return res.status(404).json({ error: 'Este usuário não existe. ' });
     }
-    // const { id, name, cnpj, company, obs, user_id } = ;
 
     const client_database = await Client.findByPk(req.body.id, {
       include: { model: Address, as: 'addresses' },
@@ -103,40 +102,17 @@ class ClientController {
         if (address.id !== null && address.id !== undefined) {
           const address_exist = await Address.findByPk(address.id);
           if (address_exist) {
-            const {
-              name,
-              city,
-              number,
-              state_registration,
-              complement,
-              google_maps,
-            } = address;
-            await address_exist.update({
-              name,
-              city,
-              number,
-              state_registration,
-              complement,
-              google_maps,
-            });
+            await address_exist.update(address);
           }
         } else {
           await client_database.createAddress(address);
         }
       })
     );
-    const { id, name, cnpj, company, obs, user_id } = req.body;
 
-    await client_database.update({
-      id,
-      name,
-      cnpj,
-      company,
-      obs,
-      user_id,
-    });
+    await client_database.update(req.body);
 
-    const client_response = await Client.findByPk(id, {
+    const client_response = await Client.findByPk(client_database.id, {
       include: { model: Address, as: 'addresses' },
     });
 
