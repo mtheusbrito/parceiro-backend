@@ -1,6 +1,12 @@
 import * as Yup from 'yup';
+
 import User from '../../models/User';
 import File from '../../models/File';
+import Address from '../../models/Address';
+import Pix from '../../models/Pix';
+import BankAccount from '../../models/BankAccount';
+
+const { Op } = require('sequelize');
 
 class UserController {
   async index(req, res) {
@@ -30,16 +36,53 @@ class UserController {
       password: Yup.string().required().min(6),
       ativo: Yup.boolean().required(),
       admin: Yup.boolean().required(),
+      addresses: Yup.array()
+        .of(
+          Yup.object().shape({
+            name: Yup.string().required(),
+            city: Yup.string().required(),
+            number: Yup.string().required(),
+            state_registration: Yup.string().required(),
+            complement: Yup.string().required(),
+            google_maps: Yup.string().required(),
+          })
+        )
+        .required(),
+      accounts: Yup.array()
+        .of(
+          Yup.object().shape({
+            name: Yup.string().required(),
+            type: Yup.string().required(),
+            agency: Yup.string().required(),
+            number: Yup.string().required(),
+            operation: Yup.string().required(),
+          })
+        )
+        .required(),
+      pixes: Yup.array().of(
+        Yup.object().shape({
+          name: Yup.string().required(),
+        })
+      ),
     });
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validadion fails' });
     }
-    const user_exist = await User.findOne({ where: { login: req.body.login } });
-    if (user_exist) {
-      return res.status(400).json({ error: 'User already exists. ' });
+    const login_exist = await User.findOne({
+      where: { login: { [Op.like]: `%${req.body.login}%` } },
+    });
+    if (login_exist) {
+      return res.status(404).json({ error: 'Este login já esta em uso. ' });
     }
-    const { id, name, email, login, admin } = await User.create(req.body);
-    return res.json({ id, name, email, login, admin });
+
+    const user = await User.create(req.body, {
+      include: [
+        { model: Address, as: 'addresses' },
+        { model: Pix, as: 'pixes' },
+        { model: BankAccount, as: 'accounts' },
+      ],
+    });
+    return res.json(user);
   }
 
   async update(req, res) {
@@ -60,39 +103,155 @@ class UserController {
       return res.status(400).json({ error: 'Validadion fails' });
     }
 
-    const user = await User.findByPk(req.body.id);
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not exists. ' });
-    }
-    const user_database = await User.findOne({
-      where: { login: req.body.login },
+    const user_database = await User.findByPk(req.body.id, {
+      include: [
+        { model: Address, as: 'addresses' },
+        { model: Pix, as: 'pixes' },
+        { model: BankAccount, as: 'accounts' },
+      ],
     });
-    if (user_database) {
-      return res.status(404).json({ error: 'User login exists. ' });
+
+    if (!user_database) {
+      return res.status(404).json({ error: 'Usuário não encontrado.' });
     }
+    // const id_request = req.body.id;
+    const login_request = req.body.login;
+
+    const login_exist = await User.findOne({
+      where: {
+        login: { [Op.like]: `%${login_request}%` },
+      },
+    });
+    if (login_exist) {
+      if (login_exist.id !== req.body.id) {
+        return res.status(404).json({ error: 'Este login já esta em uso. ' });
+      }
+    }
+
+    const {
+      addresses: addresses_request,
+      pixes: pixes_request,
+      accounts: accounts_request,
+    } = req.body;
+    // atualizar enderecos
+    const addresses_database = await user_database.getAddresses();
+    if (addresses_database.length > 0) {
+      await Promise.all(
+        addresses_database.map(async (address) => {
+          const deleted = addresses_request.find((a) => a.id === address.id);
+          if (!deleted) {
+            await user_database.removeAddress(address);
+          }
+          return deleted;
+        })
+      );
+    }
+    const pixes_database = await user_database.getPixes();
+    if (pixes_database.length > 0) {
+      await Promise.all(
+        pixes_database.map(async (pix) => {
+          if (pixes_request) {
+            const deleted = pixes_request.find((p) => p.id === pix.id);
+            if (!deleted) {
+              await user_database.removePix(pix);
+              // return deleted;
+            }
+          }
+        })
+      );
+    }
+    const accounts_database = await user_database.getAccounts();
+    if (accounts_database.length > 0) {
+      await Promise.all(
+        accounts_database.map(async (account) => {
+          const deleted = accounts_request.find((a) => a.id === account.id);
+          if (!deleted) {
+            await user_database.removeAccount(account);
+          }
+          return deleted;
+        })
+      );
+    }
+
+    if (addresses_request) {
+      await Promise.all(
+        addresses_request.map(async (address) => {
+          if (address.id !== null && address.id !== undefined) {
+            const address_exist = await Address.findByPk(address.id);
+            if (address_exist) {
+              await address_exist.update(address);
+            }
+          } else {
+            await user_database.createAddress(address);
+          }
+        })
+      );
+    }
+
+    if (pixes_request) {
+      await Promise.all(
+        pixes_request.map(async (pix) => {
+          if (pix.id !== null && pix.id !== undefined) {
+            const pix_exist = await Pix.findByPk(pix.id);
+            if (pix_exist) {
+              await pix_exist.update(pix);
+            }
+          } else {
+            await user_database.createPix(pix);
+          }
+        })
+      );
+    }
+    if (accounts_request) {
+      await Promise.all(
+        accounts_request.map(async (account) => {
+          if (account.id !== null && account.id !== undefined) {
+            const account_exist = await BankAccount.findByPk(account.id);
+            if (account_exist) {
+              await account_exist.update(account);
+            }
+          } else {
+            await user_database.createAccount(account);
+          }
+        })
+      );
+    }
+
+    await user_database.update(req.body);
 
     const {
       id,
       name,
       login,
       email,
+      admin,
       cpf,
       rg,
       phone,
-      admin,
+      addresses,
+      accounts,
+      pixes,
       ativo,
-    } = await user.update(req.body);
+    } = await User.findByPk(user_database.id, {
+      include: [
+        { model: Address, as: 'addresses' },
+        { model: Pix, as: 'pixes' },
+        { model: BankAccount, as: 'accounts' },
+      ],
+    });
 
     return res.json({
       id,
       name,
       login,
       email,
+      admin,
       cpf,
       rg,
       phone,
-      admin,
+      addresses,
+      accounts,
+      pixes,
       ativo,
     });
   }

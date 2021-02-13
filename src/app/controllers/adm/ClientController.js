@@ -126,5 +126,14 @@ class ClientController {
     //   })
     // );
   }
+
+  async destroy(req, res) {
+    const client_database = await Client.findByPk(req.params.id);
+    if (!client_database) {
+      return res.status(400).json({ error: 'Este cliente não existe. ' });
+    }
+    await client_database.destroy();
+    return res.status(204).send();
+  }
 }
 export default new ClientController();
