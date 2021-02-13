@@ -15,6 +15,7 @@ class File extends Model {
       },
       {
         sequelize,
+        modelName: 'file',
       }
     );
     return this;

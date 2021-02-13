@@ -13,17 +13,18 @@ class Address extends Model {
       },
       {
         sequelize,
+        modelName: 'address',
       }
     );
     return this;
   }
 
-  static associate(models) {
-    this.belongsToMany(models.Client, {
-      through: 'address_clients',
-      foreignKey: 'client_id',
-      as: 'clients',
-    });
-  }
+  // static associate(models) {
+  //   this.belongsToMany(models.Client, {
+  //     through: 'clientsaddress_',
+  //     foreignKey: 'client_id',
+  //     as: 'client',
+  //   });
+  // }
 }
 export default Address;

@@ -10,6 +10,7 @@ class StatusBudget extends Model {
       },
       {
         sequelize,
+        modelName: 'status_budget',
       }
     );
 

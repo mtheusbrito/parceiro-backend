@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('address_clients', {
+    await queryInterface.createTable('client_address', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,14 +10,14 @@ module.exports = {
       client_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'clients', key: 'id' },
+        references: { model: 'client', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       address_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'addresses', key: 'id' },
+        references: { model: 'address', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
@@ -28,6 +28,6 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('address_clients');
+    await queryInterface.dropTable('client_address');
   },
 };

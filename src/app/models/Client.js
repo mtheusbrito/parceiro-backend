@@ -11,6 +11,7 @@ class Client extends Model {
       },
       {
         sequelize,
+        modelName: 'client',
       }
     );
 
@@ -18,9 +19,9 @@ class Client extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
-    this.belongsToMany(models.Address, {
-      through: 'address_clients',
+    this.belongsTo(models.user, { foreignKey: 'user_id', as: 'user' });
+    this.belongsToMany(models.address, {
+      through: 'client_address',
       foreignKey: 'client_id',
       as: 'addresses',
     });

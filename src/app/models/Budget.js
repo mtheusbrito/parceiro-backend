@@ -8,6 +8,7 @@ class Budget extends Model {
       },
       {
         sequelize,
+        modelName: 'budget',
       }
     );
 
@@ -15,10 +16,10 @@ class Budget extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Client, { foreignKey: 'client_id', as: 'client' });
-    this.belongsTo(models.Address, { foreignKey: 'address_id', as: 'address' });
-    this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
-    this.belongsTo(models.StatusBudget, {
+    this.belongsTo(models.client, { foreignKey: 'client_id', as: 'client' });
+    this.belongsTo(models.address, { foreignKey: 'address_id', as: 'address' });
+    this.belongsTo(models.user, { foreignKey: 'user_id', as: 'user' });
+    this.belongsTo(models.status_budget, {
       foreignKey: 'status_budget_id',
       as: 'status',
     });

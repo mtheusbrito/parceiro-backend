@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('budgets', {
+    await queryInterface.createTable('budget', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -9,21 +9,21 @@ module.exports = {
       },
       client_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'clients', key: 'id' },
+        references: { model: 'client', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
         allowNull: true,
       },
       address_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'addresses', key: 'id' },
+        references: { model: 'address', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
         allowNull: true,
       },
       status_budget_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'status_budgets', key: 'id' },
+        references: { model: 'status_budget', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
         allowNull: true,
@@ -38,6 +38,6 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('budgets');
+    await queryInterface.dropTable('budget');
   },
 };

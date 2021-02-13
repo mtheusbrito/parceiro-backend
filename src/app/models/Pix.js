@@ -8,6 +8,7 @@ class Pix extends Model {
       },
       {
         sequelize,
+        modelName: 'pix',
       }
     );
 
@@ -15,7 +16,7 @@ class Pix extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.User);
+    this.belongsTo(models.user);
   }
 }
 export default Pix;

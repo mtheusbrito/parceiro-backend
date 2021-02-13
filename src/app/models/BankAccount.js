@@ -12,6 +12,7 @@ class BankAccount extends Model {
       },
       {
         sequelize,
+        modelName: 'bank_account',
       }
     );
 
@@ -19,7 +20,7 @@ class BankAccount extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.User);
+    this.belongsTo(models.user);
   }
 }
 export default BankAccount;

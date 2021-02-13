@@ -4,8 +4,8 @@ import File from '../app/models/File';
 import Client from '../app/models/Client';
 import Pix from '../app/models/Pix';
 import Address from '../app/models/Address';
-import AddressClient from '../app/models/AddressClient';
-import AddressUser from '../app/models/AddressUser';
+// import AddressClient from '../app/models/AddressClient';
+// import AddressUser from '../app/models/AddressUser';
 import BankAddress from '../app/models/BankAccount';
 import StatusBudget from '../app/models/StatusBudget';
 import Budget from '../app/models/Budget';
@@ -17,8 +17,6 @@ const models = [
   Client,
   Address,
   Pix,
-  AddressClient,
-  AddressUser,
   BankAddress,
   StatusBudget,
   Budget,

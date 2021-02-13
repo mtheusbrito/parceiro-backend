@@ -4,7 +4,6 @@ import Sequelize from 'sequelize';
 import Address from '../../models/Address';
 import Client from '../../models/Client';
 import User from '../../models/User';
-// import AddressClient from '../../models/AddressClient';
 import databaseConfig from '../../../config/database';
 
 const { QueryTypes } = require('sequelize');
@@ -43,27 +42,17 @@ class ClientController {
     if (!user_database) {
       return res.status(404).json({ error: 'Este usuário não existe. ' });
     }
-    const { name, cnpj, obs, company, user_id, addresses } = req.body;
-    const client = await Client.create({
-      name,
-      cnpj,
-      obs,
-      company,
-      user_id,
-    });
+    const { addresses } = req.body;
+    const client = await Client.create(req.body);
 
-    addresses.forEach(async (address) => {
-      const results = await Address.create(address);
-      if (results) {
-        console.log(results);
-        // results.forEach((result) => {
-        //   console.log(result.dataValues);
-        // });
-        // await client.addAddress(result);
-      }
-    });
-    const client_response = await Client.findByPk(client.id);
-    return res.json(client_response);
+    await Promise.all(
+      addresses.map(async (address) => {
+        const results = await Address.create(address);
+        const response = await client.addAddress(results);
+        return response;
+      })
+    );
+    return res.json(client);
   }
 
   async update(req, res) {

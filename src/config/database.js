@@ -11,5 +11,6 @@ module.exports = {
     underscored: true,
     paranoid: true,
     underscoredAll: true,
+    freezeTableName: true,
   },
 };

@@ -18,6 +18,7 @@ class User extends Model {
       },
       {
         sequelize,
+        modelName: 'user',
       }
     );
     this.addHook('beforeSave', async (user) => {
@@ -29,17 +30,17 @@ class User extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' });
-    this.belongsToMany(models.Address, {
-      through: 'AddressUser',
+    this.belongsTo(models.file, { foreignKey: 'avatar_id', as: 'avatar' });
+    this.belongsToMany(models.address, {
+      through: 'user_address',
       foreignKey: 'user_id',
       as: 'adresses',
     });
-    this.hasMany(models.Pix, {
+    this.hasMany(models.pix, {
       foreignKey: 'user_id',
       as: 'pix_keys',
     });
-    this.hasMany(models.BankAccount, {
+    this.hasMany(models.bank_account, {
       foreignKey: 'user_id',
       as: 'bank_accounts',
     });
