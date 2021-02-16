@@ -32,6 +32,7 @@ routes.get('/adm/status-budgets', StatusBudgetController.index);
 routes.post('/adm/status-budgets', StatusBudgetController.store);
 routes.delete('/adm/status-budgets/:id', StatusBudgetController.destroy);
 routes.put('/adm/status-budgets', StatusBudgetController.update);
+routes.get('/adm/status-budgets/:id', StatusBudgetController.show);
 
 routes.get('/adm/budgets', BudgetController.index);
 routes.post('/adm/budgets', BudgetController.store);

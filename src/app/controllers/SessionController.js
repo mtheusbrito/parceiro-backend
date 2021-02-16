@@ -25,7 +25,7 @@ class SessionController {
     const { id, name, email, admin } = user;
 
     return res.json({
-      user: {
+      profile: {
         id,
         name,
         email,

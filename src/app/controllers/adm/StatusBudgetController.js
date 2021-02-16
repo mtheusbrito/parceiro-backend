@@ -29,6 +29,14 @@ class StatusBudgetController {
     return res.status(204).send();
   }
 
+  async show(req, res) {
+    const status_exist = await StatusBudget.findByPk(req.params.id);
+    if (!status_exist) {
+      return res.status(400).json({ error: 'Nenhum status foi encontrado.' });
+    }
+    return res.json(status_exist);
+  }
+
   async update(req, res) {
     const schema = Yup.object({
       id: Yup.number().required(),
