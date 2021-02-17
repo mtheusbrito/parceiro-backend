@@ -16,6 +16,47 @@ class UserController {
     return res.json(users);
   }
 
+  async show(req, res) {
+    const user_exist = await User.findByPk(req.params.id, {
+      include: [
+        { model: Address, as: 'addresses' },
+        { model: Pix, as: 'pixes' },
+        { model: BankAccount, as: 'accounts' },
+      ],
+    });
+    if (!user_exist) {
+      return res.status(400).json({ error: 'Usuário não encontrado!' });
+    }
+    const {
+      id,
+      name,
+      login,
+      email,
+      admin,
+      cpf,
+      rg,
+      phone,
+      addresses,
+      accounts,
+      pixes,
+      ativo,
+    } = user_exist;
+    return res.json({
+      id,
+      name,
+      login,
+      email,
+      admin,
+      ativo,
+      cpf,
+      rg,
+      phone,
+      addresses,
+      accounts,
+      pixes,
+    });
+  }
+
   async destroy(req, res) {
     const user_exist = await User.findByPk(req.params.id);
     if (!user_exist) {
@@ -42,9 +83,10 @@ class UserController {
             name: Yup.string().required(),
             city: Yup.string().required(),
             number: Yup.string().required(),
-            state_registration: Yup.string().required(),
-            complement: Yup.string().required(),
-            google_maps: Yup.string().required(),
+            state_registration: Yup.string(),
+            cep: Yup.string().required(),
+            complement: Yup.string(),
+            google_maps: Yup.string(),
           })
         )
         .required(),
@@ -55,7 +97,7 @@ class UserController {
             type: Yup.string().required(),
             agency: Yup.string().required(),
             number: Yup.string().required(),
-            operation: Yup.string().required(),
+            operation: Yup.string(),
           })
         )
         .required(),
@@ -94,7 +136,7 @@ class UserController {
       rg: Yup.string().required(),
       phone: Yup.string().required(),
       email: Yup.string().email().required(),
-      password: Yup.string().min(6),
+      password: Yup.string().notRequired().min(6),
       ativo: Yup.boolean().required(),
       admin: Yup.boolean().required(),
     });
@@ -123,7 +165,7 @@ class UserController {
       },
     });
     if (login_exist) {
-      if (login_exist.id !== req.body.id) {
+      if (login_exist.id !== parseInt(req.body.id, 10)) {
         return res.status(404).json({ error: 'Este login já esta em uso. ' });
       }
     }

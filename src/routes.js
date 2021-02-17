@@ -27,6 +27,7 @@ routes.use('/adm', [adminMidlware]);
 routes.put('/adm/users', UserAdmController.update);
 routes.get('/adm/users', UserAdmController.index);
 routes.delete('/adm/users/:id', UserAdmController.destroy);
+routes.get('/adm/users/:id', UserAdmController.show);
 
 routes.get('/adm/status-budgets', StatusBudgetController.index);
 routes.post('/adm/status-budgets', StatusBudgetController.store);
