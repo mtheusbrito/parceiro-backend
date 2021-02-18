@@ -6,6 +6,7 @@ class Address extends Model {
       {
         name: Sequelize.STRING,
         city: Sequelize.STRING,
+        cep: Sequelize.STRING,
         number: Sequelize.STRING,
         state_registration: Sequelize.STRING,
         complement: Sequelize.STRING,

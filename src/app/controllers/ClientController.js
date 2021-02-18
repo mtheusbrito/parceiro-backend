@@ -5,22 +5,24 @@ import Client from '../models/Client';
 
 class ClientController {
   async index(req, res) {
-    const clients = await Client.findAll(
-      { where: { user_id: req.userId } },
-      { include: [{ all: true }] }
-    );
+    const clients = await Client.findAll({
+      where: { user_id: req.userId },
+      include: { model: Address, as: 'addresses' },
+    });
     return res.json(clients);
   }
 
-  async show(res, req) {
-    const client_database = Client.findByPk(req.params.id, {
-      include: [{ all: true }],
+  async show(req, res) {
+    const client_database = await Client.findByPk(req.params.id, {
+      include: { model: Address, as: 'addresses' },
     });
     if (!client_database) {
       return res.status(400).json({ error: 'Cliente não encontrado' });
     }
     if (client_database.user_id !== req.userId) {
-      return res.status(400).json({ error: 'Não autorizado!' });
+      return res
+        .status(400)
+        .json({ error: `Não autorizado!${client_database}` });
     }
     return res.json(client_database);
   }
@@ -29,12 +31,14 @@ class ClientController {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       cnpj: Yup.string().required(),
+      phone: Yup.string(),
       company: Yup.string(),
       obs: Yup.string(),
       addresses: Yup.array().of(
         Yup.object().shape({
           name: Yup.string().required(),
           city: Yup.string().required(),
+          cep: Yup.string().required(),
           number: Yup.string().required(),
           state_registration: Yup.string(),
           complement: Yup.string().required(),
@@ -61,12 +65,14 @@ class ClientController {
       id: Yup.number().required(),
       name: Yup.string().required(),
       cnpj: Yup.string().required(),
+      phone: Yup.string(),
       company: Yup.string(),
       obs: Yup.string(),
       addresses: Yup.array().of(
         Yup.object().shape({
           name: Yup.string().required(),
           city: Yup.string().required(),
+          cep: Yup.string().required(),
           number: Yup.string().required(),
           state_registration: Yup.string(),
           complement: Yup.string().required(),

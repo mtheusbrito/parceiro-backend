@@ -8,6 +8,7 @@ class Client extends Model {
         cnpj: Sequelize.STRING,
         obs: Sequelize.TEXT,
         company: Sequelize.STRING,
+        phone: Sequelize.STRING,
       },
       {
         sequelize,
