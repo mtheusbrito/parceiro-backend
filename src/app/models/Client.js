@@ -15,6 +15,12 @@ class Client extends Model {
             return this.id;
           },
         },
+        label: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return this.name;
+          },
+        },
       },
       {
         sequelize,
