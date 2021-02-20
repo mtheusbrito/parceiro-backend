@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
-import io from 'socket.io';
+// import io from 'socket.io';
 import routes from './routes';
 import './database';
 
