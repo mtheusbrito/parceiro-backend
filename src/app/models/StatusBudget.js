@@ -7,6 +7,12 @@ class StatusBudget extends Model {
         name: Sequelize.STRING,
         sequence: Sequelize.INTEGER,
         color: Sequelize.STRING,
+        value: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return this.id;
+          },
+        },
       },
       {
         sequelize,

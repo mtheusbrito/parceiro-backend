@@ -9,6 +9,12 @@ class Client extends Model {
         obs: Sequelize.TEXT,
         company: Sequelize.STRING,
         phone: Sequelize.STRING,
+        value: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return this.id;
+          },
+        },
       },
       {
         sequelize,

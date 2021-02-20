@@ -11,6 +11,12 @@ class Address extends Model {
         state_registration: Sequelize.STRING,
         complement: Sequelize.STRING,
         google_maps: Sequelize.STRING,
+        value: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return this.id;
+          },
+        },
       },
       {
         sequelize,

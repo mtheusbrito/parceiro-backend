@@ -12,6 +12,7 @@ import BudgetController from './app/controllers/adm/BudgetController';
 import ClientController from './app/controllers/adm/ClientController';
 
 import ClientUsuarioController from './app/controllers/ClientController';
+import StatusBudgetUsuarioController from './app/controllers/StatusBudgetController';
 
 const upload = multer(multerConfig);
 
@@ -53,5 +54,7 @@ routes.get('/clients/:id', ClientUsuarioController.show);
 routes.post('/clients', ClientUsuarioController.store);
 routes.put('/clients', ClientUsuarioController.update);
 routes.delete('/clients/:id', ClientUsuarioController.destroy);
+
+routes.get('/status-budgets', StatusBudgetUsuarioController.index);
 
 export default routes;
