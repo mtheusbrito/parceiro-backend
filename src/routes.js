@@ -13,6 +13,8 @@ import ClientController from './app/controllers/adm/ClientController';
 
 import ClientUsuarioController from './app/controllers/ClientController';
 import StatusBudgetUsuarioController from './app/controllers/StatusBudgetController';
+import BudgetUsuarioController from './app/controllers/BudgetController';
+import ProfileController from './app/controllers/ProfileController';
 
 const upload = multer(multerConfig);
 
@@ -23,7 +25,7 @@ routes.get('/', (req, res) => res.json({ message: 'Hello my friend!' }));
 routes.post('/adm/users', UserAdmController.store);
 routes.post('/files', upload.single('file'), FileController.store);
 
-routes.post('/files', upload.single('file'));
+// routes.post('/files', upload.single('file'));
 routes.post('/session', SessionController.store);
 // admin
 routes.use('/adm', [adminMidlware]);
@@ -55,6 +57,14 @@ routes.post('/clients', ClientUsuarioController.store);
 routes.put('/clients', ClientUsuarioController.update);
 routes.delete('/clients/:id', ClientUsuarioController.destroy);
 
+routes.get('/budgets', BudgetUsuarioController.index);
+routes.get('/budgets/lasteds/:limit', BudgetUsuarioController.index);
+
+routes.post('/budgets', BudgetUsuarioController.store);
+routes.get('/budgets/:id', BudgetUsuarioController.show);
+
 routes.get('/status-budgets', StatusBudgetUsuarioController.index);
+
+routes.put('profile', ProfileController.update);
 
 export default routes;

@@ -20,7 +20,7 @@ class Address extends Model {
         label: {
           type: Sequelize.VIRTUAL,
           get() {
-            return this.name;
+            return `${this.name} ,${this.number} ,${this.city} - CEP ${this.cep}.`;
           },
         },
       },
