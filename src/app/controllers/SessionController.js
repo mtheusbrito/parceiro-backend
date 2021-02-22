@@ -5,6 +5,7 @@ import authConfig from '../../config/auth';
 import Address from '../models/Address';
 import Pix from '../models/Pix';
 import BankAccount from '../models/BankAccount';
+import File from '../models/File';
 
 class SessionController {
   async store(req, res) {
@@ -24,6 +25,7 @@ class SessionController {
         { model: Address, as: 'addresses' },
         { model: Pix, as: 'pixes' },
         { model: BankAccount, as: 'accounts' },
+        { model: File, as: 'avatar', attributes: ['id', 'path', 'url'] },
       ],
     });
     if (!user) {
@@ -40,9 +42,11 @@ class SessionController {
       rg,
       phone,
       admin,
+      avatar,
       addresses,
       pixes,
       accounts,
+      avatar_id,
     } = user;
 
     return res.json({
@@ -55,6 +59,8 @@ class SessionController {
         login,
         phone,
         admin,
+        avatar,
+        avatar_id,
         addresses,
         pixes,
         accounts,

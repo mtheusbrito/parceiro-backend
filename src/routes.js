@@ -15,6 +15,7 @@ import ClientUsuarioController from './app/controllers/ClientController';
 import StatusBudgetUsuarioController from './app/controllers/StatusBudgetController';
 import BudgetUsuarioController from './app/controllers/BudgetController';
 import ProfileController from './app/controllers/ProfileController';
+import AvatarController from './app/controllers/AvatarController';
 
 const upload = multer(multerConfig);
 
@@ -65,6 +66,7 @@ routes.get('/budgets/:id', BudgetUsuarioController.show);
 
 routes.get('/status-budgets', StatusBudgetUsuarioController.index);
 
-routes.put('profile', ProfileController.update);
+routes.put('/profile', ProfileController.update);
+routes.put('/avatar', upload.single('file'), AvatarController.update);
 
 export default routes;

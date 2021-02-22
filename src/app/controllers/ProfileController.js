@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import Address from '../models/Address';
 import BankAccount from '../models/BankAccount';
+import File from '../models/File';
 import Pix from '../models/Pix';
 import User from '../models/User';
 
@@ -27,6 +28,7 @@ class ProfileController {
         { model: Address, as: 'addresses' },
         { model: Pix, as: 'pixes' },
         { model: BankAccount, as: 'accounts' },
+        { model: File, as: 'avatar', attributes: ['id', 'path', 'url'] },
       ],
     });
 
