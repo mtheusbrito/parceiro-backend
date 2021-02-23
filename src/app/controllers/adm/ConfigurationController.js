@@ -86,4 +86,4 @@ class ConfigurationController {
   }
 }
 
-export default ConfigurationController();
+export default new ConfigurationController();

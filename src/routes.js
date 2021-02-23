@@ -16,6 +16,7 @@ import StatusBudgetUsuarioController from './app/controllers/StatusBudgetControl
 import BudgetUsuarioController from './app/controllers/BudgetController';
 import ProfileController from './app/controllers/ProfileController';
 import AvatarController from './app/controllers/AvatarController';
+import ConfigurationController from './app/controllers/adm/ConfigurationController';
 
 const upload = multer(multerConfig);
 
@@ -50,6 +51,9 @@ routes.get('/adm/clients', ClientController.index);
 routes.post('/adm/clients', ClientController.store);
 routes.put('/adm/clients', ClientController.update);
 routes.delete('/adm/clients/:id', ClientController.destroy);
+
+routes.get('/adm/configuration', ConfigurationController.show);
+routes.put('/adm/configuration', ConfigurationController.update);
 
 routes.use('/', [authMiddleware]);
 routes.get('/clients', ClientUsuarioController.index);
