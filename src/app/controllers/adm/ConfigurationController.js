@@ -11,7 +11,7 @@ class ConfigurationController {
       ],
     });
     if (!configuration) {
-      return res.status(400).json({ error: 'Não há configuração salva' });
+      return res.status(400).json({ error: 'Ainda não há configuração salva' });
     }
 
     return res.json(configuration);

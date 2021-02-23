@@ -6,6 +6,8 @@ import Pix from '../app/models/Pix';
 import Address from '../app/models/Address';
 // import AddressClient from '../app/models/AddressClient';
 // import AddressUser from '../app/models/AddressUser';
+import Configuration from '../app/models/Configuration';
+
 import BankAddress from '../app/models/BankAccount';
 import StatusBudget from '../app/models/StatusBudget';
 import Budget from '../app/models/Budget';
@@ -20,6 +22,7 @@ const models = [
   BankAddress,
   StatusBudget,
   Budget,
+  Configuration,
 ];
 class Database {
   constructor() {
