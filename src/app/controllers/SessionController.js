@@ -46,7 +46,6 @@ class SessionController {
       addresses,
       pixes,
       accounts,
-      avatar_id,
     } = user;
 
     return res.json({
@@ -60,7 +59,6 @@ class SessionController {
         phone,
         admin,
         avatar,
-        avatar_id,
         addresses,
         pixes,
         accounts,
