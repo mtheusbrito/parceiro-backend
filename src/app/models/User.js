@@ -15,6 +15,18 @@ class User extends Model {
         password_hash: Sequelize.STRING,
         admin: Sequelize.BOOLEAN,
         ativo: Sequelize.BOOLEAN,
+        value: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return this.id;
+          },
+        },
+        label: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return this.name;
+          },
+        },
       },
       {
         sequelize,

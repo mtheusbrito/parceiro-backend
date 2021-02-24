@@ -10,23 +10,44 @@ class ClientController {
     return res.json(budgets);
   }
 
+  async show(req, res) {
+    const client_database = await Client.findByPk(req.params.id, {
+      include: [
+        { model: Address, as: 'addresses' },
+        { model: User, as: 'user' },
+      ],
+    });
+
+    if (!client_database) {
+      return res.status(400).json({ error: 'Cliente não encontrado' });
+    }
+    return res.json(client_database);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
+      user: Yup.object()
+        .shape({
+          id: Yup.number().required(),
+          label: Yup.string().required(),
+          value: Yup.string().required(),
+        })
+        .nullable()
+        .required(),
       cnpj: Yup.string().required(),
-      company: Yup.string().required(),
+      company: Yup.string(),
       phone: Yup.string(),
-      obs: Yup.string().required(),
-      user_id: Yup.number().required(),
+      obs: Yup.string(),
       addresses: Yup.array().of(
         Yup.object().shape({
           name: Yup.string().required(),
           city: Yup.string().required(),
           cep: Yup.string().required(),
           number: Yup.string().required(),
-          state_registration: Yup.string().required(),
+          state_registration: Yup.string(),
           complement: Yup.string().required(),
-          google_maps: Yup.string().required(),
+          google_maps: Yup.string(),
         })
       ),
     });
@@ -34,22 +55,17 @@ class ClientController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validadion fails' });
     }
-    const user_database = await User.findByPk(req.body.user_id);
+    const user_database = await User.findByPk(req.body.user.id);
     if (!user_database) {
       return res.status(404).json({ error: 'Este usuário não existe. ' });
     }
 
-    const client = await Client.create(req.body, {
-      include: { model: Address, as: 'addresses' },
-    });
-    // await client.addAddress();
-    // await Promise.all(
-    //   addresses.map(async (address) => {
-    //     const results = await Address.create(address);
-    //     const response = await client.addAddress(results);
-    //     return response;
-    //   })
-    // );
+    const client = await Client.create(
+      { user_id: req.body.user.id, ...req.body },
+      {
+        include: { model: Address, as: 'addresses' },
+      }
+    );
     return res.json(client);
   }
 
@@ -57,11 +73,18 @@ class ClientController {
     const schema = Yup.object().shape({
       id: Yup.number().required(),
       name: Yup.string().required(),
+      user: Yup.object()
+        .shape({
+          id: Yup.number().required(),
+          label: Yup.string().required(),
+          value: Yup.string().required(),
+        })
+        .nullable()
+        .required(),
       cnpj: Yup.string().required(),
       phone: Yup.string(),
-      company: Yup.string().required(),
-      obs: Yup.string().required(),
-      user_id: Yup.number().required(),
+      company: Yup.string(),
+      obs: Yup.string(),
       addresses: Yup.array()
         .of(
           Yup.object().shape({
@@ -81,7 +104,7 @@ class ClientController {
       return res.status(400).json({ error: 'Validadion fails' });
     }
 
-    const user_database = await User.findByPk(req.body.user_id);
+    const user_database = await User.findByPk(req.body.user.id);
     if (!user_database) {
       return res.status(404).json({ error: 'Este usuário não existe. ' });
     }
@@ -114,7 +137,7 @@ class ClientController {
       })
     );
 
-    await client_database.update(req.body);
+    await client_database.update({ user_id: req.body.user.id, ...req.body });
 
     const client_response = await Client.findByPk(client_database.id, {
       include: { model: Address, as: 'addresses' },

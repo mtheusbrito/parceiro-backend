@@ -51,6 +51,7 @@ routes.get('/adm/clients', ClientController.index);
 routes.post('/adm/clients', ClientController.store);
 routes.put('/adm/clients', ClientController.update);
 routes.delete('/adm/clients/:id', ClientController.destroy);
+routes.get('/adm/clients/:id', ClientController.show);
 
 routes.get('/adm/configuration', ConfigurationController.show);
 routes.put('/adm/configuration', ConfigurationController.update);
