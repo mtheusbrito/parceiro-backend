@@ -2,10 +2,36 @@ import * as Yup from 'yup';
 import Address from '../../models/Address';
 import Budget from '../../models/Budget';
 import Client from '../../models/Client';
+import Configuration from '../../models/Configuration';
 import StatusBudget from '../../models/StatusBudget';
 import User from '../../models/User';
 
 class BudgetController {
+  async approve(req, res) {
+    const budget = await Budget.findByPk(req.params.id);
+    const config = await Configuration.findByPk(1);
+    const { status_completed_sales_id } = config;
+
+    if (!status_completed_sales_id) {
+      return res
+        .status(400)
+        .json({ error: 'O status de aprovação ainda não foi definido!.' });
+    }
+
+    if (!budget) {
+      return res.status(400).json({ error: 'Este orçamento não existe.' });
+    }
+
+    const budget_updated = await budget.update({
+      status_budget_id: status_completed_sales_id,
+    });
+
+    if (budget_updated) {
+      return res.json({ approved: true });
+    }
+    return res.json({ approved: false });
+  }
+
   async index(req, res) {
     const budgets = await Budget.findAll({ include: [{ all: true }] });
     return res.json(budgets);

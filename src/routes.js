@@ -48,7 +48,7 @@ routes.get('/adm/budgets', BudgetController.index);
 routes.post('/adm/budgets', BudgetController.store);
 routes.delete('/adm/budgets/:id', BudgetController.destroy);
 routes.put('/adm/budgets', BudgetController.update);
-
+routes.get('/adm/budgets/:id/approve', BudgetController.approve);
 routes.get('/adm/clients', ClientController.index);
 routes.post('/adm/clients', ClientController.store);
 routes.put('/adm/clients', ClientController.update);

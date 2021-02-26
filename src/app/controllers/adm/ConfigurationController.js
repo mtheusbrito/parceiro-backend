@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import Configuration from '../../models/Configuration';
 import StatusBudget from '../../models/StatusBudget';
+import Mail from '../../../lib/Mail';
 
 class ConfigurationController {
   async show(req, res) {
@@ -81,7 +82,11 @@ class ConfigurationController {
         ],
       }
     );
-
+    // await Mail.sendMail({
+    //   to: 'Matheus Brito <matheusbritodasilva@gmail.com>',
+    //   subject: 'Teste de email',
+    //   text: 'Teste de envio de email',
+    // });
     return res.json(configuration_updated);
   }
 }
