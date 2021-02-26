@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import Configuration from '../../models/Configuration';
 import StatusBudget from '../../models/StatusBudget';
-import Mail from '../../../lib/Mail';
+// import Mail from '../../../lib/Mail';
 
 class ConfigurationController {
   async show(req, res) {
