@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import Mail from '../../../lib/Mail';
 import Address from '../../models/Address';
 import Budget from '../../models/Budget';
 import Client from '../../models/Client';
@@ -8,7 +9,9 @@ import User from '../../models/User';
 
 class BudgetController {
   async approve(req, res) {
-    const budget = await Budget.findByPk(req.params.id);
+    const budget = await Budget.findByPk(req.params.id, {
+      include: [{ all: true }],
+    });
     const config = await Configuration.findByPk(1);
     const { status_completed_sales_id } = config;
 
@@ -27,8 +30,20 @@ class BudgetController {
     });
 
     if (budget_updated) {
+      await Mail.sendMail({
+        to: `${budget_updated.user.name} <${budget_updated.user.email}>`,
+        subject: 'Alteração de status de orçamento',
+        template: 'budgetStatusChanged',
+        context: {
+          client: budget_updated.client.name,
+          address: budget_updated.address.name,
+          velocity: budget_updated.velocity,
+          status: budget_updated.status.name,
+        },
+      });
       return res.json({ approved: true });
     }
+
     return res.json({ approved: false });
   }
 

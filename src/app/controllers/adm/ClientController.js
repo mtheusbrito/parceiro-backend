@@ -93,9 +93,9 @@ class ClientController {
             city: Yup.string().required(),
             cep: Yup.string().required(),
             number: Yup.string().required(),
-            state_registration: Yup.string().required(),
-            complement: Yup.string().required(),
-            google_maps: Yup.string().required(),
+            state_registration: Yup.string(),
+            complement: Yup.string(),
+            google_maps: Yup.string(),
           })
         )
         .required(),
