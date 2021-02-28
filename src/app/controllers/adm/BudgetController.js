@@ -35,6 +35,7 @@ class BudgetController {
         subject: 'Alteração de status de orçamento',
         template: 'budgetStatusChanged',
         context: {
+          user: budget_updated.user.name,
           client: budget_updated.client.name,
           address: budget_updated.address.name,
           velocity: budget_updated.velocity,

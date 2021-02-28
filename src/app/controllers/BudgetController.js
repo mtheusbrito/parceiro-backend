@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import Mail from '../../lib/Mail';
 import Address from '../models/Address';
 import Budget from '../models/Budget';
 import Client from '../models/Client';
@@ -116,6 +117,28 @@ class BudgetController {
       },
       { include: [{ all: true }] }
     );
+    const budgetCreated = await Budget.findByPk(budget.id, {
+      include: [{ all: true }],
+    });
+    const usersAdm = await User.findAll({ where: { admin: true } });
+    await Promise.all(
+      usersAdm.map(async (admin) => {
+        await Mail.sendMail({
+          to: `${admin.name} <${admin.email}>`,
+          subject: 'Nova solicitação de orçamento',
+          template: 'budgetCreated',
+          context: {
+            user: admin.name,
+            requestingUser: budgetCreated.user.name,
+            client: budgetCreated.client.name,
+            address: budgetCreated.address.name,
+            velocity: budgetCreated.velocity,
+            status: budgetCreated.status.name,
+          },
+        });
+      })
+    );
+
     return res.json(budget);
   }
 
