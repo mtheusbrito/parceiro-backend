@@ -43,6 +43,7 @@ class BudgetController {
           address: budget_updated.address.name,
           velocity: budget_updated.velocity,
           status: budget_updated.status.name,
+          update_for: budget_updated.update_for.name,
         },
       });
       return res.json({ approved: true });
@@ -64,6 +65,45 @@ class BudgetController {
     return res.json(budgets);
   }
 
+  async show(req, res) {
+    const user = await User.findByPk(req.userId);
+    if (!user.admin) {
+      return res.status(400).json({ error: 'Acesso não permitido' });
+    }
+    const budget_database = await Budget.findByPk(req.params.id, {
+      include: [
+        {
+          model: Client,
+          as: 'client',
+          attributes: ['id', 'name', 'cnpj', 'value', 'label'],
+          include: [
+            {
+              model: Address,
+              as: 'addresses',
+              attributes: ['id', 'name', 'label', 'value'],
+            },
+          ],
+        },
+        {
+          model: Address,
+          as: 'address',
+          attributes: ['id', 'name', 'city', 'label', 'value'],
+        },
+        { model: User, as: 'user', attributes: ['id', 'name'] },
+        { model: StatusBudget, as: 'status' },
+        {
+          model: User,
+          as: 'update_for',
+          attributes: ['id', 'name', 'value', 'label'],
+        },
+      ],
+    });
+    if (!budget_database) {
+      return res.status(400).json({ error: 'Este orçamento não existe' });
+    }
+    return res.json(budget_database);
+  }
+
   async destroy(req, res) {
     const budget_database = await Budget.findByPk(req.params.id);
     if (!budget_database) {
@@ -74,61 +114,41 @@ class BudgetController {
   }
 
   async store(req, res) {
-    const schema = Yup.object().shape({
-      velocity: Yup.string().required(),
-      client_id: Yup.number().required(),
-      user_id: Yup.number().required(),
-      address_id: Yup.number().required(),
-      status_budget_id: Yup.number(),
-    });
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validadion fails' });
-    }
-    const { client_id, user_id, address_id } = req.body;
-    let { status_budget_id } = req.body;
-    const client_database = await Client.findByPk(client_id);
-    if (!client_database) {
-      return res.status(400).json({ error: 'Este cliente não existe! ' });
-    }
-    const user_database = await User.findByPk(user_id);
-    if (!user_database) {
-      return res.status(400).json({ error: 'Este usuário não existe! ' });
-    }
-
-    if (!status_budget_id) {
-      const statuses_database = await StatusBudget.findAll();
-
-      // pesquisando o status do estado de inicio
-      const status = statuses_database.reduce((resp, obj) =>
-        obj.sequence < resp.sequence ? obj : resp
-      );
-      status_budget_id = status.id;
-    }
-    const address_database = await Address.findByPk(address_id);
-    if (!address_database) {
-      return res.status(400).json({ error: 'Este endereço não existe! ' });
-    }
-    const budget = await Budget.create(
-      {
-        client_id,
-        user_id,
-        address_id,
-        status_budget_id,
-      },
-      { include: [{ all: true }] }
-    );
-    return res.json(budget);
+    return res
+      .status(200)
+      .json({ error: 'Funcionalidade em desenvolvimento!' });
   }
 
   async update(req, res) {
     const schema = Yup.object().shape({
       id: Yup.number().required(),
       velocity: Yup.string().required(),
-      client_id: Yup.number().required(),
-      user_id: Yup.number().required(),
-      address_id: Yup.number().required(),
-      status_budget_id: Yup.number(),
+      client: Yup.object()
+        .shape({
+          id: Yup.number().required(),
+          label: Yup.string().required(),
+          value: Yup.string().required(),
+        })
+        .nullable()
+        .required(),
+      address: Yup.object()
+        .shape({
+          id: Yup.number().required(),
+          label: Yup.string().required(),
+          value: Yup.string().required(),
+        })
+        .nullable()
+        .required(),
+      status: Yup.object()
+        .shape({
+          id: Yup.number().required(),
+          label: Yup.string().required(),
+          value: Yup.string().required(),
+        })
+        .nullable()
+        .required(),
     });
+
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validadion fails' });
     }
@@ -138,40 +158,51 @@ class BudgetController {
     if (!budget) {
       return res.status(404).json({ error: 'Este orçamento não existe. ' });
     }
-    const { client_id, user_id, address_id } = req.body;
-    let { status_budget_id } = req.body;
-    const client_database = await Client.findByPk(client_id);
-    if (!client_database) {
-      return res.status(400).json({ error: 'Este cliente não existe! ' });
-    }
-    const user_database = await User.findByPk(user_id);
-    if (!user_database) {
-      return res.status(400).json({ error: 'Este usuário não existe! ' });
-    }
+    const { status, address, velocity } = req.body;
+    const status_budget_id_database = budget.status_budget_id;
 
-    if (!status_budget_id) {
-      const statuses_database = await StatusBudget.findAll();
+    await budget.update({
+      velocity,
+      address_id: address.id,
+      status_budget_id: status.id,
+      update_for_id: req.userId,
+    });
 
-      // pesquisando o status do estado de inicio
-      const status = statuses_database.reduce((resp, obj) =>
-        obj.sequence < resp.sequence ? obj : resp
-      );
-      status_budget_id = status.id;
+    const budget_updated = await Budget.findByPk(budget.id, {
+      include: [
+        { model: Client, as: 'client', attributes: ['id', 'name', 'cnpj'] },
+        {
+          model: Address,
+          as: 'address',
+          attributes: ['id', 'name', 'label', 'number', 'city', 'cep'],
+        },
+        { model: User, as: 'user', attributes: ['id', 'name', 'email'] },
+        {
+          model: StatusBudget,
+          as: 'status',
+          attributes: ['id', 'name'],
+        },
+        { model: User, as: 'update_for', attributes: ['id', 'name'] },
+      ],
+    });
+    if (budget_updated) {
+      if (budget_updated.status_budget_id !== status_budget_id_database) {
+        await Mail.sendMail({
+          to: `${budget_updated.user.name} <${budget_updated.user.email}>`,
+          subject: 'Alteração de status de orçamento',
+          template: 'budgetStatusChanged',
+          context: {
+            user: budget_updated.user.name,
+            client: budget_updated.client.name,
+            address: budget_updated.address.label,
+            velocity: budget_updated.velocity,
+            status: budget_updated.status.name,
+            update_for: budget_updated.update_for.name,
+          },
+        });
+      }
     }
-    const address_database = await Address.findByPk(address_id);
-    if (!address_database) {
-      return res.status(400).json({ error: 'Este endereço não existe! ' });
-    }
-    const budget_response = await Budget.update(
-      {
-        client_id,
-        user_id,
-        address_id,
-        status_budget_id,
-      },
-      { include: [{ all: true }] }
-    );
-    return res.json(budget_response);
+    return res.json(budget_updated);
   }
 }
 export default new BudgetController();

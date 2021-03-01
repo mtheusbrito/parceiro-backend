@@ -46,9 +46,13 @@ routes.get('/adm/status-budgets/:id', StatusBudgetController.show);
 
 routes.get('/adm/budgets', BudgetController.index);
 routes.post('/adm/budgets', BudgetController.store);
+routes.put('/adm/budgets', BudgetController.update);
+routes.get('/adm/budgets/:id', BudgetController.show);
+
 routes.delete('/adm/budgets/:id', BudgetController.destroy);
 routes.put('/adm/budgets', BudgetController.update);
 routes.get('/adm/budgets/:id/approve', BudgetController.approve);
+
 routes.get('/adm/clients', ClientController.index);
 routes.post('/adm/clients', ClientController.store);
 routes.put('/adm/clients', ClientController.update);
