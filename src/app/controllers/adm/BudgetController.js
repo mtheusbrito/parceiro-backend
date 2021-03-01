@@ -40,7 +40,7 @@ class BudgetController {
         context: {
           user: budget_updated.user.name,
           client: budget_updated.client.name,
-          address: budget_updated.address.name,
+          address: budget_updated.address.label,
           velocity: budget_updated.velocity,
           status: budget_updated.status.name,
           update_for: budget_updated.update_for.name,
@@ -114,9 +114,93 @@ class BudgetController {
   }
 
   async store(req, res) {
-    return res
-      .status(200)
-      .json({ error: 'Funcionalidade em desenvolvimento!' });
+    const schema = Yup.object().shape({
+      velocity: Yup.string().required(),
+      client: Yup.object()
+        .shape({
+          id: Yup.number().required(),
+          label: Yup.string().required(),
+          value: Yup.string().required(),
+        })
+        .nullable()
+        .required(),
+      address: Yup.object()
+        .shape({
+          id: Yup.number().required(),
+          label: Yup.string().required(),
+          value: Yup.string().required(),
+        })
+        .nullable()
+        .required(),
+      status: Yup.object()
+        .shape({
+          id: Yup.number().required(),
+          label: Yup.string().required(),
+          value: Yup.string().required(),
+        })
+        .nullable()
+        .required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validadion fails' });
+    }
+
+    const { status, client, address, velocity } = req.body;
+    const user = await User.findByPk(req.userId, {
+      attributes: ['name', 'id'],
+    });
+    const client_database = await Client.findByPk(client.id, {
+      include: { model: User, as: 'user', attributes: ['id', 'name'] },
+    });
+    const { id } = await Budget.create({
+      client_id: client.id,
+      address_id: address.id,
+      user_id: client_database.user.id,
+      update_for_id: req.userId,
+      status_budget_id: status.id,
+      velocity,
+    });
+    const budget_created = await Budget.findByPk(id, {
+      include: [
+        {
+          model: Client,
+          as: 'client',
+          attributes: ['id', 'name', 'cnpj', 'value', 'label'],
+          include: [
+            {
+              model: Address,
+              as: 'addresses',
+              attributes: ['id', 'name', 'label', 'value'],
+            },
+          ],
+        },
+        {
+          model: Address,
+          as: 'address',
+          attributes: ['id', 'name', 'city', 'label', 'value'],
+        },
+        { model: User, as: 'user', attributes: ['id', 'name', 'email'] },
+        { model: StatusBudget, as: 'status' },
+      ],
+    });
+
+    if (budget_created) {
+      await Mail.sendMail({
+        to: `${budget_created.user.name} <${budget_created.user.email}>`,
+        subject: 'Novo orçamento',
+        template: 'budgetCreatedForAdm',
+        context: {
+          user: budget_created.user.name,
+          client: budget_created.client.name,
+          address: budget_created.address.label,
+          velocity: budget_created.velocity,
+          status: budget_created.status.name,
+          created_for: user.name,
+        },
+      });
+    }
+    return res.status(201).json(budget_created);
   }
 
   async update(req, res) {
@@ -202,7 +286,7 @@ class BudgetController {
         });
       }
     }
-    return res.json(budget_updated);
+    return res.status(200).json(budget_updated);
   }
 }
 export default new BudgetController();
