@@ -25,10 +25,13 @@ class BudgetController {
       return res.status(400).json({ error: 'Este orçamento não existe.' });
     }
 
-    const budget_updated = await budget.update({
+    await budget.update({
       status_budget_id: status_completed_sales_id,
+      update_for_id: req.userId,
     });
-
+    const budget_updated = await Budget.findByPk(budget.id, {
+      include: [{ all: true }],
+    });
     if (budget_updated) {
       await Mail.sendMail({
         to: `${budget_updated.user.name} <${budget_updated.user.email}>`,
@@ -49,7 +52,15 @@ class BudgetController {
   }
 
   async index(req, res) {
-    const budgets = await Budget.findAll({ include: [{ all: true }] });
+    const budgets = await Budget.findAll({
+      include: [
+        { model: Client, as: 'client', attributes: ['id', 'name', 'cnpj'] },
+        { model: Address, as: 'address', attributes: ['id', 'name', 'city'] },
+        { model: User, as: 'user', attributes: ['id', 'name'] },
+        { model: StatusBudget, as: 'status' },
+        { model: User, as: 'update_for', attributes: ['id', 'name'] },
+      ],
+    });
     return res.json(budgets);
   }
 

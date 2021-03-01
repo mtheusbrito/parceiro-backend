@@ -19,6 +19,10 @@ class Budget extends Model {
     this.belongsTo(models.client, { foreignKey: 'client_id', as: 'client' });
     this.belongsTo(models.address, { foreignKey: 'address_id', as: 'address' });
     this.belongsTo(models.user, { foreignKey: 'user_id', as: 'user' });
+    this.belongsTo(models.user, {
+      foreignKey: 'update_for_id',
+      as: 'update_for',
+    });
     this.belongsTo(models.status_budget, {
       foreignKey: 'status_budget_id',
       as: 'status',
