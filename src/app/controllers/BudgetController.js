@@ -40,7 +40,7 @@ class BudgetController {
         { model: User, as: 'update_for', attributes: ['id', 'name'] },
       ],
       limit: Number.isNaN(limit) ? null : limit,
-      order: [['createdAt', Number.isNaN(limit) ? 'ASC' : 'DESC']],
+      order: [['created_at', 'DESC']],
     });
     return res.json(budgets);
   }
@@ -104,18 +104,29 @@ class BudgetController {
     if (!address_database) {
       return res.status(400).json({ error: 'Este endereço não existe! ' });
     }
-    const budget = await Budget.create(
-      {
-        client_id,
-        user_id,
-        address_id,
-        status_budget_id,
-        velocity,
-      },
-      { include: [{ all: true }] }
-    );
-    const budgetCreated = await Budget.findByPk(budget.id, {
-      include: [{ all: true }],
+    const { id } = await Budget.create({
+      client_id,
+      user_id,
+      address_id,
+      status_budget_id,
+      velocity,
+    });
+    const budgetCreated = await Budget.findByPk(id, {
+      include: [
+        { model: Client, as: 'client', attributes: ['id', 'name', 'cnpj'] },
+        {
+          model: Address,
+          as: 'address',
+          attributes: ['id', 'name', 'label', 'number', 'city', 'cep'],
+        },
+        { model: User, as: 'user', attributes: ['id', 'name', 'email'] },
+        {
+          model: StatusBudget,
+          as: 'status',
+          attributes: ['id', 'name'],
+        },
+        { model: User, as: 'update_for', attributes: ['id', 'name'] },
+      ],
     });
     const usersAdm = await User.findAll({ where: { admin: true } });
     await Promise.all(
@@ -128,7 +139,7 @@ class BudgetController {
             user: admin.name,
             requestingUser: budgetCreated.user.name,
             client: budgetCreated.client.name,
-            address: budgetCreated.address.name,
+            address: budgetCreated.address.label,
             velocity: budgetCreated.velocity,
             status: budgetCreated.status.name,
           },
@@ -136,7 +147,7 @@ class BudgetController {
       })
     );
 
-    return res.json(budget);
+    return res.json(budgetCreated);
   }
 
   // async update(req, res) {
