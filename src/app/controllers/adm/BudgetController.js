@@ -55,7 +55,12 @@ class BudgetController {
   async index(req, res) {
     const budgets = await Budget.findAll({
       include: [
-        { model: Client, as: 'client', attributes: ['id', 'name', 'cnpj'] },
+        {
+          model: Client,
+          as: 'client',
+          attributes: ['id', 'name', 'cnpj'],
+          where: { deleted_at: null },
+        },
         { model: Address, as: 'address', attributes: ['id', 'name', 'city'] },
         { model: User, as: 'user', attributes: ['id', 'name'] },
         { model: StatusBudget, as: 'status' },
