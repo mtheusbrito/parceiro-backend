@@ -19,11 +19,27 @@ class ReportController {
       budgetsInAnalize = await (
         await Budget.findAndCountAll({
           where: { status_budget_id: status_analysis_budgets_id },
+          include: [
+            {
+              model: Client,
+              as: 'client',
+              attributes: [],
+              where: { deleted_at: null },
+            },
+          ],
         })
       ).count;
       completedSales = await (
         await Budget.findAndCountAll({
           where: { status_budget_id: status_completed_sales_id },
+          include: [
+            {
+              model: Client,
+              as: 'client',
+              attributes: [],
+              where: { deleted_at: null },
+            },
+          ],
         })
       ).count;
     } else {
