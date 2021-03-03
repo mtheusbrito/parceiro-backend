@@ -13,6 +13,7 @@ class BankAccount extends Model {
       {
         sequelize,
         modelName: 'bank_account',
+        paranoid: true,
       }
     );
 

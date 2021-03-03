@@ -9,6 +9,7 @@ class Pix extends Model {
       {
         sequelize,
         modelName: 'pix',
+        paranoid: true,
       }
     );
 

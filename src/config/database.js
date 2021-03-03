@@ -9,8 +9,10 @@ module.exports = {
   define: {
     timestamps: true,
     underscored: true,
-    paranoid: true,
     underscoredAll: true,
     freezeTableName: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    deletedAt: 'deleted_at',
   },
 };

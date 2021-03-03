@@ -61,6 +61,7 @@ class BudgetController {
         { model: StatusBudget, as: 'status' },
         { model: User, as: 'update_for', attributes: ['id', 'name'] },
       ],
+      order: [['created_at', 'DESC']],
     });
     return res.json(budgets);
   }

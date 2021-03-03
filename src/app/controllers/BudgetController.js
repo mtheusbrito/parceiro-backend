@@ -33,9 +33,18 @@ class BudgetController {
     const budgets = await Budget.findAll({
       where: { user_id: req.userId },
       include: [
-        { model: Client, as: 'client', attributes: ['id', 'name', 'cnpj'] },
+        {
+          model: Client,
+          as: 'client',
+          attributes: ['id', 'name', 'cnpj'],
+          where: { deleted_at: null },
+        },
         { model: Address, as: 'address', attributes: ['id', 'name', 'city'] },
-        { model: User, as: 'user', attributes: ['id', 'name'] },
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'name'],
+        },
         { model: StatusBudget, as: 'status' },
         { model: User, as: 'update_for', attributes: ['id', 'name'] },
       ],

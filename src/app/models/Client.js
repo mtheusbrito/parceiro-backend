@@ -25,6 +25,7 @@ class Client extends Model {
       {
         sequelize,
         modelName: 'client',
+        paranoid: true,
       }
     );
 

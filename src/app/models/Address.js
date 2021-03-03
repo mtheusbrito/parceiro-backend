@@ -27,6 +27,7 @@ class Address extends Model {
       {
         sequelize,
         modelName: 'address',
+        paranoid: true,
       }
     );
     return this;

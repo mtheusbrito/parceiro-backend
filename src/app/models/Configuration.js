@@ -4,7 +4,11 @@ class Configuration extends Model {
   static init(sequelize) {
     super.init(
       { email: Sequelize.STRING },
-      { sequelize, modelName: 'configuration' }
+      {
+        sequelize,
+        modelName: 'configuration',
+        paranoid: true,
+      }
     );
 
     return this;

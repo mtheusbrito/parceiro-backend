@@ -36,6 +36,14 @@ class ReportController {
             status_budget_id: status_analysis_budgets_id,
             user_id: req.userId,
           },
+          include: [
+            {
+              model: Client,
+              as: 'client',
+              attributes: [],
+              where: { deleted_at: null },
+            },
+          ],
         })
       ).count;
       completedSales = await (
@@ -44,6 +52,14 @@ class ReportController {
             status_budget_id: status_completed_sales_id,
             user_id: req.userId,
           },
+          include: [
+            {
+              model: Client,
+              as: 'client',
+              attributes: [],
+              where: { deleted_at: null },
+            },
+          ],
         })
       ).count;
     }

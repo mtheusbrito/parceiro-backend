@@ -9,6 +9,7 @@ class Budget extends Model {
       {
         sequelize,
         modelName: 'budget',
+        paranoid: true,
       }
     );
 
