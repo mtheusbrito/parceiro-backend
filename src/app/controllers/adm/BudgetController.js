@@ -60,10 +60,9 @@ class BudgetController {
           update_for: budget_updated.update_for.name,
         },
       });
-      return res.json({ budget_updated });
     }
 
-    return res.json({ approved: false });
+    return res.json({ budget: budget_updated });
   }
 
   async index(req, res) {
