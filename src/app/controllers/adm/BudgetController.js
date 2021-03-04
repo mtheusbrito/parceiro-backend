@@ -30,7 +30,21 @@ class BudgetController {
       update_for_id: req.userId,
     });
     const budget_updated = await Budget.findByPk(budget.id, {
-      include: [{ all: true }],
+      include: [
+        { model: Client, as: 'client', attributes: ['id', 'name', 'cnpj'] },
+        {
+          model: Address,
+          as: 'address',
+          attributes: ['id', 'name', 'label', 'number', 'city', 'cep'],
+        },
+        { model: User, as: 'user', attributes: ['id', 'name', 'email'] },
+        {
+          model: StatusBudget,
+          as: 'status',
+          attributes: ['id', 'name'],
+        },
+        { model: User, as: 'update_for', attributes: ['id', 'name', 'email'] },
+      ],
     });
     if (budget_updated) {
       await Mail.sendMail({
@@ -46,7 +60,7 @@ class BudgetController {
           update_for: budget_updated.update_for.name,
         },
       });
-      return res.json({ approved: true });
+      return res.json({ budget_updated });
     }
 
     return res.json({ approved: false });
