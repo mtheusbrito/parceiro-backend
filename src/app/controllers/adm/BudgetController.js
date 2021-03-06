@@ -4,6 +4,7 @@ import Address from '../../models/Address';
 import Budget from '../../models/Budget';
 import Client from '../../models/Client';
 import Configuration from '../../models/Configuration';
+import Gratification from '../../models/Gratification';
 import StatusBudget from '../../models/StatusBudget';
 import User from '../../models/User';
 
@@ -68,6 +69,7 @@ class BudgetController {
   }
 
   async index(req, res) {
+    const { status_completed_sales_id } = await Configuration.findByPk(1);
     const budgets = await Budget.findAll({
       include: [
         {
@@ -80,10 +82,15 @@ class BudgetController {
         { model: User, as: 'user', attributes: ['id', 'name'] },
         { model: StatusBudget, as: 'status' },
         { model: User, as: 'update_for', attributes: ['id', 'name'] },
+        {
+          model: Gratification,
+          as: 'gratification',
+          attributes: ['id', 'delivery_date', 'payment_date', 'value'],
+        },
       ],
       order: [['created_at', 'DESC']],
     });
-    return res.json(budgets);
+    return res.json({ budgets, approved_status: status_completed_sales_id });
   }
 
   async show(req, res) {

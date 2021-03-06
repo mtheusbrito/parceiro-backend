@@ -19,12 +19,10 @@ class Gratification extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.budget, { foreignKey: 'budget_id', as: 'budget' });
     this.belongsTo(models.user, {
       foreignKey: 'created_for_id',
       as: 'created_for',
     });
-    this.belongsTo(models.user, { foreignKey: 'user_id', as: 'user' });
   }
 }
 export default Gratification;

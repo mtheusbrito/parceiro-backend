@@ -7,21 +7,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      budget_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'budget', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
-        allowNull: true,
-      },
       created_for_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'user', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
-        allowNull: true,
-      },
-      user_id: {
         type: Sequelize.INTEGER,
         references: { model: 'user', key: 'id' },
         onUpdate: 'CASCADE',
@@ -35,7 +21,7 @@ module.exports = {
         type: Sequelize.DATE,
       },
       value: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.STRING,
       },
       // Data da venda, data de entrega do cliente, nome do cleinte, valor, Data prevista de pagamento.
       deleted_at: { type: Sequelize.DATE, allowNull: true },

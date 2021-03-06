@@ -28,6 +28,10 @@ class Budget extends Model {
       foreignKey: 'status_budget_id',
       as: 'status',
     });
+    this.belongsTo(models.gratification, {
+      foreignKey: 'gratification_id',
+      as: 'gratification',
+    });
   }
 }
 export default Budget;
