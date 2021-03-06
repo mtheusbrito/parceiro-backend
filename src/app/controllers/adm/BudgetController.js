@@ -62,7 +62,9 @@ class BudgetController {
       });
     }
 
-    return res.json({ budget: budget_updated });
+    return res.json({
+      budget: budget_updated,
+    });
   }
 
   async index(req, res) {
