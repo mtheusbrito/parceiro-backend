@@ -85,7 +85,7 @@ class BudgetController {
         {
           model: Gratification,
           as: 'gratification',
-          attributes: ['id', 'delivery_date', 'payment_date', 'value'],
+          attributes: ['id', 'delivery_date', 'payment_date', 'payment'],
         },
       ],
       order: [['created_at', 'DESC']],

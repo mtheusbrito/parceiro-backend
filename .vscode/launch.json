@@ -8,6 +8,7 @@
       "type": "pwa-node",
       "request": "attach",
       "protocol": "inspector",
+      "outputCapture": "std",
       "restart": true,
       "name": "Launch Program",
       "skipFiles": [

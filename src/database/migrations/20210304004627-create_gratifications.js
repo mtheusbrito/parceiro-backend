@@ -20,8 +20,8 @@ module.exports = {
       payment_date: {
         type: Sequelize.DATE,
       },
-      value: {
-        type: Sequelize.STRING,
+      payment: {
+        type: Sequelize.DECIMAL(15, 2),
       },
       // Data da venda, data de entrega do cliente, nome do cleinte, valor, Data prevista de pagamento.
       deleted_at: { type: Sequelize.DATE, allowNull: true },
