@@ -9,6 +9,26 @@ import StatusBudget from '../../models/StatusBudget';
 import User from '../../models/User';
 
 class BudgetController {
+  static async sendEmailBudgetUpdated(budget_updated) {
+    try {
+      await Mail.sendMail({
+        to: `${budget_updated.user.name} <${budget_updated.user.email}>`,
+        subject: 'Alteração de status de orçamento',
+        template: 'budgetStatusChanged',
+        context: {
+          user: budget_updated.user.name,
+          client: budget_updated.client.name,
+          address: budget_updated.address.label,
+          velocity: budget_updated.velocity,
+          status: budget_updated.status.name,
+          update_for: budget_updated.update_for.name,
+        },
+      });
+    } catch (err) {
+      console.log(`Erro ao enviar email: ${err}`);
+    }
+  }
+
   async approve(req, res) {
     const budget = await Budget.findByPk(req.params.id, {
       include: [{ all: true }],
@@ -48,19 +68,7 @@ class BudgetController {
       ],
     });
     if (budget_updated) {
-      await Mail.sendMail({
-        to: `${budget_updated.user.name} <${budget_updated.user.email}>`,
-        subject: 'Alteração de status de orçamento',
-        template: 'budgetStatusChanged',
-        context: {
-          user: budget_updated.user.name,
-          client: budget_updated.client.name,
-          address: budget_updated.address.label,
-          velocity: budget_updated.velocity,
-          status: budget_updated.status.name,
-          update_for: budget_updated.update_for.name,
-        },
-      });
+      BudgetController.sendEmailBudgetUpdated(budget_updated);
     }
 
     return res.json({
@@ -123,6 +131,11 @@ class BudgetController {
           model: User,
           as: 'update_for',
           attributes: ['id', 'name', 'value', 'label'],
+        },
+        {
+          model: Gratification,
+          as: 'gratification',
+          attributes: ['id', 'delivery_date', 'payment_date', 'payment'],
         },
       ],
     });
@@ -264,6 +277,8 @@ class BudgetController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validadion fails' });
     }
+    const config = await Configuration.findByPk(1);
+    const { status_completed_sales_id } = config;
 
     const budget = await Budget.findByPk(req.body.id);
 
@@ -299,19 +314,10 @@ class BudgetController {
     });
     if (budget_updated) {
       if (budget_updated.status_budget_id !== status_budget_id_database) {
-        await Mail.sendMail({
-          to: `${budget_updated.user.name} <${budget_updated.user.email}>`,
-          subject: 'Alteração de status de orçamento',
-          template: 'budgetStatusChanged',
-          context: {
-            user: budget_updated.user.name,
-            client: budget_updated.client.name,
-            address: budget_updated.address.label,
-            velocity: budget_updated.velocity,
-            status: budget_updated.status.name,
-            update_for: budget_updated.update_for.name,
-          },
-        });
+        if (budget_updated.status_budget_id !== status_completed_sales_id) {
+          await budget_updated.setGratification(null);
+        }
+        BudgetController.sendEmailBudgetUpdated(budget_updated);
       }
     }
     return res.status(200).json(budget_updated);
