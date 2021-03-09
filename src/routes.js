@@ -64,7 +64,7 @@ routes.get('/adm/configuration', ConfigurationController.show);
 routes.put('/adm/configuration', ConfigurationController.update);
 
 routes.post('/adm/gratification', GratificationController.store);
-
+routes.put('/adm/gratification', GratificationController.update);
 routes.use('/', [authMiddleware]);
 routes.use('/reports', ReportController.index);
 routes.get('/clients', ClientUsuarioController.index);

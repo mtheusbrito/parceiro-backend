@@ -10,13 +10,25 @@ class BudgetController {
   async show(req, res) {
     const budget = await Budget.findByPk(req.params.id, {
       include: [
-        { model: StatusBudget, as: 'status' },
-        { model: User, as: 'user', attributes: ['id', 'name'] },
-        { model: Address, as: 'address' },
+        { model: StatusBudget, as: 'status', where: { deleted_at: null } },
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'name'],
+          where: { deleted_at: null },
+        },
+        { model: Address, as: 'address', where: { deleted_at: null } },
         {
           model: Client,
           as: 'client',
-          include: { model: Address, as: 'addresses' },
+          include: [
+            {
+              model: Address,
+              as: 'addresses',
+              where: { deleted_at: null },
+              attributes: ['id', 'value', 'label', 'number'],
+            },
+          ],
         },
       ],
     });
@@ -39,14 +51,25 @@ class BudgetController {
           attributes: ['id', 'name', 'cnpj'],
           where: { deleted_at: null },
         },
-        { model: Address, as: 'address', attributes: ['id', 'name', 'city'] },
+        {
+          model: Address,
+          as: 'address',
+          attributes: ['id', 'name', 'city'],
+          where: { deleted_at: null },
+        },
         {
           model: User,
           as: 'user',
           attributes: ['id', 'name'],
+          where: { deleted_at: null },
         },
-        { model: StatusBudget, as: 'status' },
-        { model: User, as: 'update_for', attributes: ['id', 'name'] },
+        { model: StatusBudget, as: 'status', where: { deleted_at: null } },
+        {
+          model: User,
+          as: 'update_for',
+          attributes: ['id', 'name'],
+          where: { deleted_at: null },
+        },
       ],
       limit: Number.isNaN(limit) ? null : limit,
       order: [['created_at', 'DESC']],
