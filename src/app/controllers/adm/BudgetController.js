@@ -318,12 +318,18 @@ class BudgetController {
           attributes: ['id', 'name'],
         },
         { model: User, as: 'update_for', attributes: ['id', 'name'] },
+        { model: Gratification, as: 'gratification', attributes: ['id'] },
       ],
     });
     if (budget_updated) {
       if (budget_updated.status_budget_id !== status_budget_id_database) {
         if (budget_updated.status_budget_id !== status_completed_sales_id) {
-          await budget_updated.setGratification(null);
+          if (budget_updated.gratification) {
+            await budget_updated.setGratification(null);
+            await Gratification.destroy({
+              where: { id: budget_updated.gratification.id },
+            });
+          }
         }
         BudgetController.sendEmailBudgetUpdated(budget_updated);
       }
