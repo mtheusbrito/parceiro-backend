@@ -15,7 +15,7 @@ module.exports = {
         allowNull: true,
       },
       unit: { type: Sequelize.STRING, allowNull: false },
-      amount: { type: Sequelize.NUMBER, allowNull: false },
+      amount: { type: Sequelize.INTEGER, allowNull: false },
       description: { type: Sequelize.TEXT, allowNull: false },
       value: {
         type: Sequelize.DECIMAL(15, 2),
