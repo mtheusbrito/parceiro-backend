@@ -32,6 +32,10 @@ class Budget extends Model {
       foreignKey: 'gratification_id',
       as: 'gratification',
     });
+    this.hasMany(models.item, {
+      foreignKey: 'budget_id',
+      as: 'items',
+    });
   }
 }
 export default Budget;

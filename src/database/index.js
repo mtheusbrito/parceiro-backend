@@ -13,6 +13,7 @@ import StatusBudget from '../app/models/StatusBudget';
 import Budget from '../app/models/Budget';
 import databaseConfig from '../config/database';
 import Gratification from '../app/models/Gratification';
+import Item from '../app/models/Item';
 
 const models = [
   User,
@@ -25,6 +26,7 @@ const models = [
   Budget,
   Configuration,
   Gratification,
+  Item,
 ];
 class Database {
   constructor() {
