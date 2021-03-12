@@ -19,6 +19,7 @@ import AvatarController from './app/controllers/AvatarController';
 import ConfigurationController from './app/controllers/adm/ConfigurationController';
 import ReportController from './app/controllers/adm/ReportController';
 import GratificationController from './app/controllers/adm/GratificationController';
+import ItemController from './app/controllers/adm/ItemController';
 
 const upload = multer(multerConfig);
 
@@ -65,6 +66,9 @@ routes.put('/adm/configuration', ConfigurationController.update);
 
 routes.post('/adm/gratification', GratificationController.store);
 routes.put('/adm/gratification', GratificationController.update);
+
+routes.post('/adm/item', ItemController.store);
+
 routes.use('/', [authMiddleware]);
 routes.use('/reports', ReportController.index);
 routes.get('/clients', ClientUsuarioController.index);
