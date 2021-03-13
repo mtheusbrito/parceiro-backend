@@ -14,13 +14,15 @@ module.exports = {
         onDelete: 'SET NULL',
         allowNull: true,
       },
-      unit: { type: Sequelize.STRING, allowNull: false },
+      unit: { type: Sequelize.INTEGER, allowNull: false },
+      contract_time: { type: Sequelize.STRING, allowNull: false },
       amount: { type: Sequelize.INTEGER, allowNull: false },
       description: { type: Sequelize.TEXT, allowNull: false },
-      value: {
+      unit_value: {
         type: Sequelize.DECIMAL(15, 2),
       },
-      instalation: {
+
+      installation_value: {
         type: Sequelize.DECIMAL(15, 2),
       },
 

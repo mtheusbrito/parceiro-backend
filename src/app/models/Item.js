@@ -4,11 +4,12 @@ class Item extends Model {
   static init(sequelize) {
     super.init(
       {
-        unit: Sequelize.STRING,
-        amount: Sequelize.NUMBER,
+        unit: Sequelize.INTEGER,
+        contract_time: Sequelize.TEXT,
+        amount: Sequelize.INTEGER,
         description: Sequelize.TEXT,
-        value: Sequelize.DECIMAL,
-        instalation: Sequelize.DECIMAL,
+        unit_value: Sequelize.DECIMAL,
+        installation_value: Sequelize.DECIMAL,
       },
       {
         sequelize,
