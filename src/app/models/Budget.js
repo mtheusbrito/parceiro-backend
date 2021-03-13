@@ -34,7 +34,7 @@ class Budget extends Model {
     });
     this.hasMany(models.item, {
       foreignKey: 'budget_id',
-      as: 'items',
+      as: 'itens',
     });
   }
 }

@@ -5,6 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "trace": true,
       "type": "pwa-node",
       "request": "attach",
       "protocol": "inspector",

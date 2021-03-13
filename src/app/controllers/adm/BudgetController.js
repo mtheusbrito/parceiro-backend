@@ -5,6 +5,7 @@ import Budget from '../../models/Budget';
 import Client from '../../models/Client';
 import Configuration from '../../models/Configuration';
 import Gratification from '../../models/Gratification';
+import Item from '../../models/Item';
 import StatusBudget from '../../models/StatusBudget';
 import User from '../../models/User';
 
@@ -145,6 +146,7 @@ class BudgetController {
           as: 'gratification',
           attributes: ['id', 'delivery_date', 'payment_date', 'payment'],
         },
+        { model: Item, as: 'itens' },
       ],
     });
     if (!budget_database) {

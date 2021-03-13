@@ -14,7 +14,7 @@ module.exports = {
         onDelete: 'SET NULL',
         allowNull: true,
       },
-      unit: { type: Sequelize.INTEGER, allowNull: false },
+      unit: { type: Sequelize.STRING, allowNull: false },
       contract_time: { type: Sequelize.STRING, allowNull: false },
       amount: { type: Sequelize.INTEGER, allowNull: false },
       description: { type: Sequelize.TEXT, allowNull: false },
@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.DECIMAL(15, 2),
       },
 
-      installation_value: {
+      instalation_value: {
         type: Sequelize.DECIMAL(15, 2),
       },
 
