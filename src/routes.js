@@ -69,6 +69,7 @@ routes.put('/adm/gratification', GratificationController.update);
 
 routes.post('/adm/itens', ItemController.store);
 routes.delete('/adm/itens/:id', ItemController.delete);
+routes.put('/adm/itens', ItemController.update);
 
 routes.use('/', [authMiddleware]);
 routes.use('/reports', ReportController.index);
