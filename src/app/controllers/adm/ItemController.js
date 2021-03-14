@@ -3,6 +3,15 @@ import Budget from '../../models/Budget';
 import Item from '../../models/Item';
 
 class ItemController {
+  async delete(req, res) {
+    const item_database = await Item.findByPk(req.params.id);
+    if (!item_database) {
+      return res.status(400).json({ error: 'Este serviço não existe' });
+    }
+    await item_database.destroy();
+    return res.status(204).send();
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       budget_id: Yup.number().required(),
@@ -38,7 +47,7 @@ class ItemController {
       instalation_value,
     });
     if (item) {
-      await budget_database.addItem(item);
+      await budget_database.addItens(item);
     }
     return res.json(item);
   }
