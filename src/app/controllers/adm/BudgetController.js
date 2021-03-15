@@ -43,7 +43,14 @@ class BudgetController {
 
   async reportServices(req, res) {
     const { hash } = req.params;
-    const budget = await Budget.findOne({ where: { hash } });
+    const budget = await Budget.findOne({
+      where: { hash },
+      include: [
+        { model: Client, as: 'client' },
+        { model: Address, as: 'address' },
+        { model: Item, as: 'itens' },
+      ],
+    });
 
     await Report.sendReport(
       {
@@ -140,6 +147,7 @@ class BudgetController {
           as: 'gratification',
           attributes: ['id', 'delivery_date', 'payment_date', 'payment'],
         },
+        { model: Item, as: 'itens' },
       ],
       order: [['created_at', 'DESC']],
     });

@@ -2,6 +2,7 @@
 import ejs from 'ejs';
 import { resolve } from 'path';
 import pdf from 'html-pdf';
+import moment from 'moment';
 
 class Report {
   // constructor() {
@@ -24,6 +25,8 @@ class Report {
       report.fileName
     );
     const { data } = report;
+
+    data.current_date = moment().format('DD/MM/YYYY');
     ejs.renderFile(viewsPath, { data }, (err, html) => {
       response(html ?? err);
       if (!err) {
