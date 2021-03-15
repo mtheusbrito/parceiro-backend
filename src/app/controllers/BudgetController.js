@@ -3,6 +3,7 @@ import Mail from '../../lib/Mail';
 import Address from '../models/Address';
 import Budget from '../models/Budget';
 import Client from '../models/Client';
+import Item from '../models/Item';
 import StatusBudget from '../models/StatusBudget';
 import User from '../models/User';
 
@@ -34,7 +35,7 @@ class BudgetController {
     });
 
     if (!budget) {
-      return res.status(400).json({ error: 'Cliente não encontrado' });
+      return res.status(400).json({ error: 'Orçamento não encontrado' });
     }
 
     return res.json(budget);
@@ -71,6 +72,7 @@ class BudgetController {
           attributes: ['id', 'name'],
           // where: { deleted_at: null },
         },
+        { model: Item, as: 'itens' },
       ],
       limit: Number.isNaN(limit) ? null : limit,
       order: [['created_at', 'DESC']],
