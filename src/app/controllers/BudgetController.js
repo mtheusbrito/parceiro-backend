@@ -41,6 +41,7 @@ class BudgetController {
   }
 
   async index(req, res) {
+    // eslint-disable-next-line no-unused-vars
     const limit = parseInt(req.params.limit, 10);
     const budgets = await Budget.findAll({
       where: { user_id: req.userId },
@@ -68,7 +69,7 @@ class BudgetController {
           model: User,
           as: 'update_for',
           attributes: ['id', 'name'],
-          where: { deleted_at: null },
+          // where: { deleted_at: null },
         },
       ],
       limit: Number.isNaN(limit) ? null : limit,

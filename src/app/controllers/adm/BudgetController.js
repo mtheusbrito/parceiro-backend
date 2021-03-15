@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import puppeteer from 'puppeteer';
 import Mail from '../../../lib/Mail';
 import Address from '../../models/Address';
 import Budget from '../../models/Budget';
@@ -8,8 +9,51 @@ import Gratification from '../../models/Gratification';
 import Item from '../../models/Item';
 import StatusBudget from '../../models/StatusBudget';
 import User from '../../models/User';
+import Report from '../../../lib/Report';
 
 class BudgetController {
+  async reportServicesDownload(req, res) {
+    const { hash } = req.params;
+    const budget = await Budget.findOne({ where: { hash } });
+    if (!budget) {
+      return res.status(400).json({ error: 'Este orçamento não existe.' });
+    }
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    await page.goto(
+      `http://localhost:3333/budgets/services/${req.params.hash}/`,
+      {
+        waitUntil: 'networkidle0',
+      }
+    );
+
+    const pdf = await page.pdf({
+      title: 'novo pdf',
+      printBackground: true,
+      format: 'Letter',
+    });
+
+    await browser.close();
+
+    res.contentType('application/pdf');
+
+    return res.send(pdf);
+  }
+
+  async reportServices(req, res) {
+    const { hash } = req.params;
+    const budget = await Budget.findOne({ where: { hash } });
+
+    await Report.sendReport(
+      {
+        fileName: 'servicesBudget.ejs',
+        data: budget,
+      },
+      (response) => res.send(response)
+    );
+  }
+
   static async sendEmailBudgetUpdated(budget_updated) {
     try {
       await Mail.sendMail({
