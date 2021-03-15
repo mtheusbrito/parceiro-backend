@@ -18,7 +18,9 @@ class BudgetController {
     if (!budget) {
       return res.status(400).json({ error: 'Este orçamento não existe.' });
     }
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      ignoreDefaultArgs: ['--disable-extensions'],
+    });
     const page = await browser.newPage();
 
     await page.goto(
