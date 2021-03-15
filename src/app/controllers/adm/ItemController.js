@@ -10,7 +10,7 @@ class ItemController {
       amount: Yup.number().required(),
       description: Yup.string().required(),
       unit_value: Yup.string().nullable().required(),
-      instalation_value: Yup.string().nullable().required(),
+      instalation_value: Yup.string(),
       contract_time: Yup.string().required(),
     });
     if (!(await schema.isValid(req.body))) {
@@ -58,7 +58,7 @@ class ItemController {
       amount: Yup.number().required(),
       description: Yup.string().required(),
       unit_value: Yup.string().nullable().required(),
-      instalation_value: Yup.string().nullable().required(),
+      instalation_value: Yup.string(),
       contract_time: Yup.string().required(),
     });
     if (!(await schema.isValid(req.body))) {
