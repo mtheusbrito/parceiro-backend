@@ -29,13 +29,14 @@ class Report {
 
     data.current_date = moment().format('DD/MM/YYYY');
     ejs.renderFile(viewsPath, { data }, (err, html) => {
-      // response(html ?? err);
       if (!err) {
         const options = {
           format: 'A4',
+          orientation: 'portrait',
+          height: '11.25in',
         };
         pdf
-          .create(html)
+          .create(html, options)
           .toFile(
             resolve(
               __dirname,
@@ -47,7 +48,7 @@ class Report {
             ),
             (errCreatePdf, filePdf) => {
               if (!errCreatePdf) {
-                // response(html);
+                console.log(errCreatePdf);
               }
             }
           );

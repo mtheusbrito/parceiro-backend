@@ -8,40 +8,42 @@
 
     <link href="https://unpkg.com/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
     <style>
-      html{
-        margin: 20px;
-      }
-      body{
-        min-height: 100%;
-      }
-      header{
+
+      @media print{
+
+      html, body, .page {
+        height: 100%;
+        padding: 10px;
+
+    }
+      .header{
       color: #4b555e;
       text-align: end;
-      font-size: 8px;
+      font-size: 9px;
       display: flex;
       justify-content:space-between;
       align-items: center;
-
-
+      flex-direction: row;
       }
       footer{
-          font-size: 11px;
-           position: fixed;
-           bottom: 20px;
-           left: 20px;
-          right: 20px;
+          text-align: left;
+          font-size: 9px;
+          display: block;
+          position: fixed;
+          bottom: 10px;
+      }
 
+       .header img{
+        width: 120px;
       }
-      header img{
-        width: 160px;
-      }
+
        .client_name{
-        font-size: 16px;
+        font-size: 12px;
         color: white;
-        margin-top: 40px;
+        margin-top: 20px;
         text-align: center;
         background: gray;
-        padding: 6px 0px;
+        padding: 2px 0px;
       }
       .client_address{
         font-size: 16px;
@@ -58,12 +60,16 @@
         th {
             text-align: left;
         }
+      }
+
+
+
     </style>
   <title>Document</title>
 </head>
 
 <body>
-<header>
+<div class="header">
   <img src="https://www.itanetbandalarga.com.br/img/logo-itanet.png">
   <p><b>
     Rio de Janeiro- RJ, <%= data.current_date %><br/>
@@ -74,7 +80,7 @@
     Telefone: (21) 3785 7000<br/>
     www.itanet.com.br<br/></b>
   </p>
-</header>
+</div>
 <div class="client_name">
   <b>ORÇAMENTO - <%= data.client.name %></b>
 </div>
@@ -97,7 +103,6 @@
       </thead>
       <tbody>
       <% if(data.itens.length > 0){ %>
-
         <% data.itens.forEach((item,i) => { %>
           <tr>
             <td><%= i+1 %></td>

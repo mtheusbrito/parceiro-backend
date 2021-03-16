@@ -8,29 +8,59 @@
 
     <link href="https://unpkg.com/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
     <style>
-      html{
+
+
+  @media print {
+     html,body{
         margin: 20px;
+         height: 100%;
       }
-      header{
-         color: #6c757d;
+      body{
+        min-height: 100%;
+      }
+     header{
+      color: #4b555e;
       text-align: end;
-        font-size: 11px;
-        display: flex;
-        justify-content:space-between;
-        align-items: center;
+      font-size: 8px;
+      display: flex;
+      justify-content:space-between;
+      align-items: center;
 
 
       }
-      header img{
-        width: 160px;
+  footer {
+    position: fixed;
+    bottom: 0;
+     font-size: 11px;
+    }
+ header img{
+        width: 120px;
       }
       .client_name{
+        font-size: 16px;
         color: white;
-        margin-top: 30px;
+        margin-top: 40px;
         text-align: center;
         background: gray;
-        padding: 10px;
+        padding: 6px 0px;
       }
+      .client_address{
+        font-size: 16px;
+        color: gray;
+        text-align: center;
+        padding: 6px 0px;
+        text-transform: capitalize;
+      }
+      table {
+            margin-top: 30px;
+            width: 100%;
+            font-size: 11px;
+        }
+        th {
+            text-align: left;
+        }
+  }
+
 
     </style>
   <title>Document</title>
@@ -42,7 +72,8 @@
   <p><b>
     Rio de Janeiro- RJ, <%= data.current_date %><br/>
     Empresa: Fiber Vox Telecomunicações<br/>
-    Endereço: Rua Antunes Maciel, 4999, São Cristóvão - Rio de Janeiro - RJ CEP: 20940-010<br />
+    Endereço: Rua Antunes Maciel, 4999, <br/>
+    São Cristóvão - Rio de Janeiro - RJ CEP: 20940-010<br />
     CNPJ: 24.492.300/0001-01<br/>
     Telefone: (21) 3785 7000<br/>
     www.itanet.com.br<br/></b>
@@ -51,5 +82,47 @@
 <div class="client_name">
   <b>ORÇAMENTO - <%= data.client.name %></b>
 </div>
+<div class="client_address">
+  <b><%= data.address.label %></b>
+</div>
+<div>
+    <table>
+      <thead>
+        <tr>
+          <th>ITEM</th>
+          <th>UN</th>
+          <th>QUANTIDADE</th>
+          <th>DESCRIÃO DO SERVIÇO</th>
+          <th>VALOR</th>
+          <th>INSTALAÇÃO</th>
+          <th>TEMPO DE CONTRATO</th>
+
+        </tr>
+      </thead>
+      <tbody>
+      <% if(data.itens.length > 0){ %>
+
+        <% data.itens.forEach((item,i) => { %>
+          <tr>
+            <td><%= i+1 %></td>
+             <td><%= item.unit %></td>
+             <td><%= item.amount %></td>
+             <td><%= item.description %></td>
+              <td><%= (item.unit_value) ? item.unit_value+' R$' : '-' %></td>
+              <td><%= (item.instalation_value) ? item.instalation_value+' R$' : '-' %></td>
+              <td><%= (item.contract_time) ? item.contract_time: '-' %></td>
+          </tr>
+        <%  }); %>
+      <% } %>
+      </tbody>
+    </table>
+</div>
 </body>
+<footer>
+  <p>
+    Validade do Orçamento: 10 dias.<br/>
+    Prazo de Instalação: Até 30 dias.<br/>
+    Valor Mensal: Parcelas fixas de acordo com a data de vencimento.
+  </p>
+</footer>
 </html>
