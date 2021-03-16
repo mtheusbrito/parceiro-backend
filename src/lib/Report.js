@@ -24,11 +24,12 @@ class Report {
       'reports',
       report.fileName
     );
+    const reportPath = resolve(__dirname, '..', '..', 'tmp', 'reports');
     const { data } = report;
 
     data.current_date = moment().format('DD/MM/YYYY');
     ejs.renderFile(viewsPath, { data }, (err, html) => {
-      response(html ?? err);
+      // response(html ?? err);
       if (!err) {
         const options = {
           height: '11.25in',
@@ -40,13 +41,23 @@ class Report {
             height: '20mm',
           },
         };
-        // pdf
-        //   .create(html, options)
-        //   .toFile('report.pdf', (errCreatePdf, filePdf) => {
-        //     if (!errCreatePdf) {
-        //       response(html);
-        //     }
-        //   });
+        pdf
+          .create(html)
+          .toFile(
+            resolve(
+              __dirname,
+              '..',
+              '..',
+              'tmp',
+              'reports',
+              `${data.hash}.pdf`
+            ),
+            (errCreatePdf, filePdf) => {
+              if (!errCreatePdf) {
+                response(html);
+              }
+            }
+          );
       }
     });
   }
