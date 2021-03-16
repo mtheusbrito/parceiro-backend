@@ -15,7 +15,7 @@ class Report {
   //   this.transporter.renderFile(viewsPath, {})
   // }
 
-  sendReport(report, response) {
+  sendReport(report) {
     const viewsPath = resolve(
       __dirname,
       '..',
@@ -54,7 +54,7 @@ class Report {
             ),
             (errCreatePdf, filePdf) => {
               if (!errCreatePdf) {
-                response(html);
+                // response(html);
               }
             }
           );

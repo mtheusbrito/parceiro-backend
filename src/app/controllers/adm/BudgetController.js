@@ -46,8 +46,11 @@ class BudgetController {
     );
     // `http://localhost:3333/reports/${budget.hash}.pdf`;
 
-    res.download(`http://localhost:3333/reports/${budget.hash}.pdf`);
-    return res.send();
+    // res.download(`http://localhost:3333/reports/${budget.hash}.pdf`);
+    // return res.send();
+    return res.json({
+      urlDownload: `http://localhost:3333/reports/${budget.hash}.pdf`,
+    });
     // const browser = await puppeteer.launch({
     //   ignoreDefaultArgs: ['--disable-extensions'],
     // });
