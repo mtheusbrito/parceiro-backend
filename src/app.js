@@ -20,6 +20,10 @@ class App {
       '/files',
       express.static(path.resolve(__dirname, '..', 'tmp', 'uploads'))
     );
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7ce84f1726c7dfb3d8cff6ff88d3aaa0673ec218
     this.server.use(
       '/reports',
       express.static(path.resolve(__dirname, '..', 'tmp', 'reports'))

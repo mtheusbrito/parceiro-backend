@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 // import puppeteer from 'puppeteer';
 
 import { resolve } from 'path';
+
 import Mail from '../../../lib/Mail';
 import Address from '../../models/Address';
 import Budget from '../../models/Budget';
@@ -24,17 +25,13 @@ class BudgetController {
         { model: Item, as: 'itens' },
       ],
     });
-
     if (!budget) {
       return res.status(400).json({ error: 'Este orçamento não existe.' });
     }
-    await Report.sendReport(
-      {
-        fileName: 'servicesBudget.ejs',
-        data: budget,
-      }
-      // (response) => res.send(response)
-    );
+    await Report.sendReport({
+      fileName: 'servicesBudget.ejs',
+      data: budget,
+    });
     // eslint-disable-next-line no-unused-vars
     const file = resolve(
       __dirname,
@@ -44,36 +41,10 @@ class BudgetController {
       'reports',
       `${budget.hash}.pdf`
     );
-    // `http://localhost:3333/reports/${budget.hash}.pdf`;
 
-    // res.download(`http://localhost:3333/reports/${budget.hash}.pdf`);
-    // return res.send();
     return res.json({
       urlDownload: `http://localhost:3333/reports/${budget.hash}.pdf`,
     });
-    // const browser = await puppeteer.launch({
-    //   ignoreDefaultArgs: ['--disable-extensions'],
-    // });
-    // const page = await browser.newPage();
-
-    // await page.goto(
-    //   `http://localhost:3333/budgets/services/${req.params.hash}/`,
-    //   {
-    //     waitUntil: 'networkidle0',
-    //   }
-    // );
-
-    // const pdf = await page.pdf({
-    //   title: 'novo pdf',
-    //   printBackground: true,
-    //   format: 'Letter',
-    // });
-
-    // await browser.close();
-
-    // res.contentType('application/pdf');
-    // retunr res.dow
-    // return res.send(pdf);
   }
 
   async reportServices(req, res) {

@@ -32,14 +32,7 @@ class Report {
       // response(html ?? err);
       if (!err) {
         const options = {
-          height: '11.25in',
-          width: '8.5in',
-          header: {
-            height: '20mm',
-          },
-          footer: {
-            height: '20mm',
-          },
+          format: 'A4',
         };
         pdf
           .create(html)
