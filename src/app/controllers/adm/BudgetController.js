@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
-import puppeteer from 'puppeteer';
+// import puppeteer from 'puppeteer';
+// import { resolve } from 'path';
 import Mail from '../../../lib/Mail';
 import Address from '../../models/Address';
 import Budget from '../../models/Budget';
@@ -14,33 +15,55 @@ import Report from '../../../lib/Report';
 class BudgetController {
   async reportServicesDownload(req, res) {
     const { hash } = req.params;
-    const budget = await Budget.findOne({ where: { hash } });
+    const budget = await Budget.findOne({
+      where: { hash },
+      include: [
+        { model: Client, as: 'client' },
+        { model: Address, as: 'address' },
+        { model: Item, as: 'itens' },
+      ],
+    });
     if (!budget) {
       return res.status(400).json({ error: 'Este orçamento não existe.' });
     }
-    const browser = await puppeteer.launch({
-      ignoreDefaultArgs: ['--disable-extensions'],
-    });
-    const page = await browser.newPage();
+    // const browser = await puppeteer.launch({
+    //   ignoreDefaultArgs: ['--disable-extensions'],
+    // });
+    // const page = await browser.newPage();
 
-    await page.goto(
-      `http://localhost:3333/budgets/services/${req.params.hash}/`,
+    // await page.goto(
+    //   `http://localhost:3333/budgets/services/${req.params.hash}/`,
+    //   {
+    //     waitUntil: 'networkidle0',
+    //   }
+    // );
+
+    // const pdf = await page.pdf({
+    //   title: 'novo pdf',
+    //   printBackground: true,
+    //   format: 'Letter',
+    // });
+
+    // await browser.close();
+
+    // res.contentType('application/pdf');
+
+    // return res.send(pdf);
+    await Report.sendReport(
       {
-        waitUntil: 'networkidle0',
+        fileName: 'servicesBudget.ejs',
+        data: budget,
       }
+      // (response) => res.send(response)
     );
 
-    const pdf = await page.pdf({
-      title: 'novo pdf',
-      printBackground: true,
-      format: 'Letter',
+    return res.json({
+      urlFile: `http://localhost:3333/reports/${budget.hash}.pdf`,
     });
-
-    await browser.close();
-
-    res.contentType('application/pdf');
-
-    return res.send(pdf);
+    // return res.sendfile(
+    //   `${resolve(__dirname, '..', '..', 'tmp', 'reports')}/${budget.hash}.pdf`,
+    //   budget.hash
+    // );
   }
 
   async reportServices(req, res) {

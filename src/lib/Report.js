@@ -15,7 +15,7 @@ class Report {
   //   this.transporter.renderFile(viewsPath, {})
   // }
 
-  sendReport(report, response) {
+  sendReport(report) {
     const viewsPath = resolve(
       __dirname,
       '..',
@@ -28,25 +28,19 @@ class Report {
 
     data.current_date = moment().format('DD/MM/YYYY');
     ejs.renderFile(viewsPath, { data }, (err, html) => {
-      response(html ?? err);
+      // response(html ?? err);
       if (!err) {
         const options = {
-          height: '11.25in',
-          width: '8.5in',
-          header: {
-            height: '20mm',
-          },
-          footer: {
-            height: '20mm',
-          },
+          format: 'A4',
         };
-        // pdf
-        //   .create(html, options)
-        //   .toFile('report.pdf', (errCreatePdf, filePdf) => {
-        //     if (!errCreatePdf) {
-        //       response(html);
-        //     }
-        //   });
+        pdf
+          .create(html, options)
+          .toFile(
+            `${resolve(__dirname, '..', '..', 'tmp', 'reports')}/${
+              data.hash
+            }.pdf`,
+            (errCreatePdf, filePdf) => {}
+          );
       }
     });
   }

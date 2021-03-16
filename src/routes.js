@@ -24,7 +24,6 @@ import ItemController from './app/controllers/adm/ItemController';
 const upload = multer(multerConfig);
 
 const routes = new Router();
-
 routes.get('/', (req, res) => res.json({ message: 'Hello my friend!' }));
 routes.get(
   '/orcamentos/servicos/:hash',
