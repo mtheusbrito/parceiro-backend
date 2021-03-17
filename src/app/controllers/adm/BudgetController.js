@@ -33,10 +33,8 @@ class BudgetController {
       fileName: 'servicesBudget.ejs',
       data: budget,
     });
-
-    return res.json({
-      urlDownload: `${process.env.URL_API}reports/${budget.hash}.pdf`,
-    });
+    const urlDownload = `${process.env.URL_API}reports/${budget.hash}.pdf`;
+    return res.json({ urlDownload });
   }
 
   static async sendEmailBudgetUpdated(budget_updated) {
