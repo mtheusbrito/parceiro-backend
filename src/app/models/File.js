@@ -1,5 +1,7 @@
 import Sequelize, { Model } from 'sequelize';
 
+require('dotenv').config();
+
 class File extends Model {
   static init(sequelize) {
     super.init(
@@ -9,7 +11,7 @@ class File extends Model {
         url: {
           type: Sequelize.VIRTUAL,
           get() {
-            return `http://localhost:3333/files/${this.path}`;
+            return `${process.env.URL_API}files/${this.path}`;
           },
         },
       },

@@ -12,6 +12,8 @@ import StatusBudget from '../../models/StatusBudget';
 import User from '../../models/User';
 import Report from '../../../lib/Report';
 
+require('dotenv').config();
+
 class BudgetController {
   async reportServicesDownload(req, res) {
     const { hash } = req.params;
@@ -33,7 +35,7 @@ class BudgetController {
     });
 
     return res.json({
-      urlDownload: `http://localhost:3333/reports/${budget.hash}.pdf`,
+      urlDownload: `${process.env.URL_API}reports/${budget.hash}.pdf`,
     });
   }
 
