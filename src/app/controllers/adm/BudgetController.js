@@ -29,7 +29,7 @@ class BudgetController {
       return res.status(400).json({ error: 'Este orçamento não existe.' });
     }
 
-    await Report.gethtmltopdf({
+    await Report.createOrUpdate({
       fileName: 'servicesBudget.ejs',
       data: budget,
     });
