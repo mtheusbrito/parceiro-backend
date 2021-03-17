@@ -3,6 +3,7 @@ import ejs from 'ejs';
 import { resolve } from 'path';
 import pdf from 'html-pdf';
 import moment from 'moment';
+import { Promise, reject } from 'bluebird';
 
 class Report {
   // constructor() {
@@ -15,7 +16,9 @@ class Report {
   //   this.transporter.renderFile(viewsPath, {})
   // }
 
-  sendReport(report) {
+  createUpdate(report) {
+    const { data } = report;
+    data.current_date = moment().format('DD/MM/YYYY');
     const viewsPath = resolve(
       __dirname,
       '..',
@@ -24,10 +27,15 @@ class Report {
       'reports',
       report.fileName
     );
-    const reportPath = resolve(__dirname, '..', '..', 'tmp', 'reports');
-    const { data } = report;
+    const reportPath = resolve(
+      __dirname,
+      '..',
+      '..',
+      'tmp',
+      'reports',
+      `${data.hash}.pdf`
+    );
 
-    data.current_date = moment().format('DD/MM/YYYY');
     ejs.renderFile(viewsPath, { data }, (err, html) => {
       if (!err) {
         const options = {
@@ -35,23 +43,10 @@ class Report {
           orientation: 'portrait',
           height: '11.25in',
         };
+
         pdf
           .create(html, options)
-          .toFile(
-            resolve(
-              __dirname,
-              '..',
-              '..',
-              'tmp',
-              'reports',
-              `${data.hash}.pdf`
-            ),
-            (errCreatePdf, filePdf) => {
-              if (!errCreatePdf) {
-                console.log(errCreatePdf);
-              }
-            }
-          );
+          .toFile(reportPath, (errCreated, filePdf) => {});
       }
     });
   }

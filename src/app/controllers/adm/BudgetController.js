@@ -1,8 +1,6 @@
 import * as Yup from 'yup';
 // import puppeteer from 'puppeteer';
 
-import { resolve } from 'path';
-
 import Mail from '../../../lib/Mail';
 import Address from '../../models/Address';
 import Budget from '../../models/Budget';
@@ -28,43 +26,14 @@ class BudgetController {
     if (!budget) {
       return res.status(400).json({ error: 'Este orçamento não existe.' });
     }
-    await Report.sendReport({
+    await Report.createUpdate({
       fileName: 'servicesBudget.ejs',
       data: budget,
     });
-    // eslint-disable-next-line no-unused-vars
-    const file = resolve(
-      __dirname,
-      '..',
-      '..',
-      'tmp',
-      'reports',
-      `${budget.hash}.pdf`
-    );
 
     return res.json({
       urlDownload: `http://localhost:3333/reports/${budget.hash}.pdf`,
     });
-  }
-
-  async reportServices(req, res) {
-    const { hash } = req.params;
-    const budget = await Budget.findOne({
-      where: { hash },
-      include: [
-        { model: Client, as: 'client' },
-        { model: Address, as: 'address' },
-        { model: Item, as: 'itens' },
-      ],
-    });
-
-    await Report.sendReport(
-      {
-        fileName: 'servicesBudget.ejs',
-        data: budget,
-      },
-      (response) => res.send(response)
-    );
   }
 
   static async sendEmailBudgetUpdated(budget_updated) {

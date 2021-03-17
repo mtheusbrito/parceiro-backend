@@ -29,7 +29,6 @@ routes.get(
   '/orcamentos/servicos/:hash',
   BudgetController.reportServicesDownload
 );
-routes.get('/budgets/services/:hash', BudgetController.reportServices);
 
 // routes free
 routes.post('/adm/users', UserAdmController.store);
