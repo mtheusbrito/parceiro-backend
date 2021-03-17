@@ -47,9 +47,8 @@ class Report {
               `${data.hash}.pdf`
             ),
             (errCreatePdf, filePdf) => {
-              if (!errCreatePdf) {
-                console.log(errCreatePdf);
-              }
+              // if (!errCreatePdf) {
+              // }
             }
           );
       }

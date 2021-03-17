@@ -1,8 +1,6 @@
 import * as Yup from 'yup';
 // import puppeteer from 'puppeteer';
 
-import { resolve } from 'path';
-
 import Mail from '../../../lib/Mail';
 import Address from '../../models/Address';
 import Budget from '../../models/Budget';
@@ -33,14 +31,6 @@ class BudgetController {
       data: budget,
     });
     // eslint-disable-next-line no-unused-vars
-    const file = resolve(
-      __dirname,
-      '..',
-      '..',
-      'tmp',
-      'reports',
-      `${budget.hash}.pdf`
-    );
 
     return res.json({
       urlDownload: `http://localhost:3333/reports/${budget.hash}.pdf`,
