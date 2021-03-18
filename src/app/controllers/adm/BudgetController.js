@@ -1,14 +1,42 @@
 import * as Yup from 'yup';
+// import puppeteer from 'puppeteer';
+
 import Mail from '../../../lib/Mail';
 import Address from '../../models/Address';
 import Budget from '../../models/Budget';
 import Client from '../../models/Client';
 import Configuration from '../../models/Configuration';
 import Gratification from '../../models/Gratification';
+import Item from '../../models/Item';
 import StatusBudget from '../../models/StatusBudget';
 import User from '../../models/User';
+import Report from '../../../lib/Report';
+
+require('dotenv').config();
 
 class BudgetController {
+  async reportServicesDownload(req, res) {
+    const { hash } = req.params;
+    const budget = await Budget.findOne({
+      where: { hash },
+      include: [
+        { model: Client, as: 'client' },
+        { model: Address, as: 'address' },
+        { model: Item, as: 'itens' },
+      ],
+    });
+    if (!budget) {
+      return res.status(400).json({ error: 'Este orçamento não existe.' });
+    }
+
+    await Report.createOrUpdate({
+      fileName: 'servicesBudget.ejs',
+      data: budget,
+    });
+    const urlDownload = `${process.env.URL_API}reports/${budget.hash}.pdf`;
+    return res.json({ urlDownload });
+  }
+
   static async sendEmailBudgetUpdated(budget_updated) {
     try {
       await Mail.sendMail({
@@ -95,6 +123,7 @@ class BudgetController {
           as: 'gratification',
           attributes: ['id', 'delivery_date', 'payment_date', 'payment'],
         },
+        { model: Item, as: 'itens' },
       ],
       order: [['created_at', 'DESC']],
     });
@@ -116,14 +145,22 @@ class BudgetController {
             {
               model: Address,
               as: 'addresses',
-              attributes: ['id', 'name', 'label', 'value'],
+              attributes: [
+                'id',
+                'name',
+                'label',
+                'value',
+                'number',
+                'city',
+                'cep',
+              ],
             },
           ],
         },
         {
           model: Address,
           as: 'address',
-          attributes: ['id', 'name', 'city', 'label', 'value'],
+          attributes: ['id', 'name', 'label', 'value', 'number', 'city', 'cep'],
         },
         { model: User, as: 'user', attributes: ['id', 'name'] },
         { model: StatusBudget, as: 'status' },
@@ -137,6 +174,7 @@ class BudgetController {
           as: 'gratification',
           attributes: ['id', 'delivery_date', 'payment_date', 'payment'],
         },
+        { model: Item, as: 'itens' },
       ],
     });
     if (!budget_database) {

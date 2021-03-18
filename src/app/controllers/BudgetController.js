@@ -3,6 +3,7 @@ import Mail from '../../lib/Mail';
 import Address from '../models/Address';
 import Budget from '../models/Budget';
 import Client from '../models/Client';
+import Item from '../models/Item';
 import StatusBudget from '../models/StatusBudget';
 import User from '../models/User';
 
@@ -10,25 +11,38 @@ class BudgetController {
   async show(req, res) {
     const budget = await Budget.findByPk(req.params.id, {
       include: [
-        { model: StatusBudget, as: 'status' },
-        { model: User, as: 'user', attributes: ['id', 'name'] },
-        { model: Address, as: 'address' },
+        { model: StatusBudget, as: 'status', where: { deleted_at: null } },
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'name'],
+          where: { deleted_at: null },
+        },
+        { model: Address, as: 'address', where: { deleted_at: null } },
         {
           model: Client,
           as: 'client',
-          include: { model: Address, as: 'addresses' },
+          include: [
+            {
+              model: Address,
+              as: 'addresses',
+              where: { deleted_at: null },
+              attributes: ['id', 'value', 'label', 'number'],
+            },
+          ],
         },
       ],
     });
 
     if (!budget) {
-      return res.status(400).json({ error: 'Cliente não encontrado' });
+      return res.status(400).json({ error: 'Orçamento não encontrado' });
     }
 
     return res.json(budget);
   }
 
   async index(req, res) {
+    // eslint-disable-next-line no-unused-vars
     const limit = parseInt(req.params.limit, 10);
     const budgets = await Budget.findAll({
       where: { user_id: req.userId },
@@ -39,14 +53,26 @@ class BudgetController {
           attributes: ['id', 'name', 'cnpj'],
           where: { deleted_at: null },
         },
-        { model: Address, as: 'address', attributes: ['id', 'name', 'city'] },
+        {
+          model: Address,
+          as: 'address',
+          attributes: ['id', 'name', 'city'],
+          where: { deleted_at: null },
+        },
         {
           model: User,
           as: 'user',
           attributes: ['id', 'name'],
+          where: { deleted_at: null },
         },
-        { model: StatusBudget, as: 'status' },
-        { model: User, as: 'update_for', attributes: ['id', 'name'] },
+        { model: StatusBudget, as: 'status', where: { deleted_at: null } },
+        {
+          model: User,
+          as: 'update_for',
+          attributes: ['id', 'name'],
+          // where: { deleted_at: null },
+        },
+        { model: Item, as: 'itens' },
       ],
       limit: Number.isNaN(limit) ? null : limit,
       order: [['created_at', 'DESC']],

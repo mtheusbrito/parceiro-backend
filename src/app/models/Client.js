@@ -33,7 +33,10 @@ class Client extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.user, { foreignKey: 'user_id', as: 'user' });
+    this.belongsTo(models.user, {
+      foreignKey: 'user_id',
+      as: 'user',
+    });
     this.belongsToMany(models.address, {
       through: 'client_address',
       foreignKey: 'client_id',

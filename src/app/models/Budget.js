@@ -1,10 +1,12 @@
 import Sequelize, { Model } from 'sequelize';
+import { nanoid } from 'nanoid';
 
 class Budget extends Model {
   static init(sequelize) {
     super.init(
       {
         velocity: Sequelize.STRING,
+        hash: Sequelize.STRING,
       },
       {
         sequelize,
@@ -12,7 +14,9 @@ class Budget extends Model {
         paranoid: true,
       }
     );
-
+    this.addHook('beforeSave', async (budget) => {
+      budget.hash = await nanoid(11);
+    });
     return this;
   }
 
@@ -31,6 +35,10 @@ class Budget extends Model {
     this.belongsTo(models.gratification, {
       foreignKey: 'gratification_id',
       as: 'gratification',
+    });
+    this.hasMany(models.item, {
+      foreignKey: 'budget_id',
+      as: 'itens',
     });
   }
 }

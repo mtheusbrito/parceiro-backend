@@ -19,12 +19,17 @@ import AvatarController from './app/controllers/AvatarController';
 import ConfigurationController from './app/controllers/adm/ConfigurationController';
 import ReportController from './app/controllers/adm/ReportController';
 import GratificationController from './app/controllers/adm/GratificationController';
+import ItemController from './app/controllers/adm/ItemController';
 
 const upload = multer(multerConfig);
 
 const routes = new Router();
-
 routes.get('/', (req, res) => res.json({ message: 'Hello my friend!' }));
+routes.get(
+  '/orcamentos/servicos/:hash',
+  BudgetController.reportServicesDownload
+);
+
 // routes free
 routes.post('/adm/users', UserAdmController.store);
 routes.post('/files', upload.single('file'), FileController.store);
@@ -64,6 +69,11 @@ routes.get('/adm/configuration', ConfigurationController.show);
 routes.put('/adm/configuration', ConfigurationController.update);
 
 routes.post('/adm/gratification', GratificationController.store);
+routes.put('/adm/gratification', GratificationController.update);
+
+routes.post('/adm/itens', ItemController.store);
+routes.delete('/adm/itens/:id', ItemController.delete);
+routes.put('/adm/itens', ItemController.update);
 
 routes.use('/', [authMiddleware]);
 routes.use('/reports', ReportController.index);
