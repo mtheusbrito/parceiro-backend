@@ -35,7 +35,7 @@ class GratificationController {
         {
           model: Gratification,
           as: 'gratification',
-          where: { delete_ad: null },
+          where: { deleted_at: null },
         },
       ],
       limit: Number.isNaN(limit) ? null : limit,
