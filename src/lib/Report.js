@@ -15,7 +15,8 @@ class Report {
         format: 'Letter',
         orientation: 'landscape',
         // height: '11.25in',
-        width: '12in',
+        width: '11.69in',
+        height: '8.27in',
       };
       const viewsPath = resolve(
         __dirname,
