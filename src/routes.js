@@ -20,6 +20,7 @@ import ConfigurationController from './app/controllers/adm/ConfigurationControll
 import ReportController from './app/controllers/adm/ReportController';
 import GratificationController from './app/controllers/adm/GratificationController';
 import ItemController from './app/controllers/adm/ItemController';
+import GratificationUserController from './app/controllers/GratificationController';
 
 const upload = multer(multerConfig);
 
@@ -93,5 +94,8 @@ routes.get('/status-budgets', StatusBudgetUsuarioController.index);
 
 routes.put('/profile', ProfileController.update);
 routes.put('/avatar', upload.single('file'), AvatarController.update);
+
+routes.get('/gratifications', GratificationUserController.index);
+routes.get('/gratifications/lasteds/:limit', GratificationUserController.index);
 
 export default routes;

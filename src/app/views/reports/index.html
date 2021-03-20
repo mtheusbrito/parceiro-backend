@@ -9,43 +9,70 @@
     <link href="https://unpkg.com/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
     <style>
 
+      @media print{
 
-  @media print {
-     html,body{
-        margin: 20px;
-         height: 100%;
-      }
-      body{
-        min-height: 100%;
-      }
-     header{
-      color: #4b555e;
-      text-align: end;
-      font-size: 8px;
-      display: flex;
-      justify-content:space-between;
-      align-items: center;
+      html, body, .page {
+        height: 100%;
+        padding: 10px;
 
-
-      }
-  footer {
-    position: fixed;
-    bottom: 0;
-     font-size: 11px;
     }
- header img{
+      .header{
+        width: 100%;
+      display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    -moz-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-align-content: center;
+    -ms-flex-line-pack: center;
+    align-content: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+      }
+      footer{
+          text-align: left;
+          font-size: 9px;
+          display: block;
+          position: fixed;
+          bottom: 10px;
+      }
+
+       .logo img{
         width: 120px;
       }
-      .client_name{
-        font-size: 16px;
+      .description p{
+        color: #4b555e;
+        text-align: end;
+        font-size: 9px;
+      }
+       .client_name{
+        font-size: 12px;
         color: white;
-        margin-top: 40px;
+        margin-top: 20px;
         text-align: center;
         background: gray;
-        padding: 6px 0px;
+        padding: 2px 0px;
       }
       .client_address{
-        font-size: 16px;
+        font-size: 12px;
         color: gray;
         text-align: center;
         padding: 6px 0px;
@@ -54,12 +81,18 @@
       table {
             margin-top: 30px;
             width: 100%;
-            font-size: 11px;
+            font-size: 9px;
         }
         th {
             text-align: left;
+
         }
-  }
+
+        table, th, td {
+        border: 1px solid black;
+        }
+      }
+
 
 
     </style>
@@ -67,18 +100,24 @@
 </head>
 
 <body>
-<header>
-  <img src="https://www.itanetbandalarga.com.br/img/logo-itanet.png">
-  <p><b>
-    Rio de Janeiro- RJ, <%= data.current_date %><br/>
-    Empresa: Fiber Vox Telecomunicações<br/>
-    Endereço: Rua Antunes Maciel, 4999, <br/>
-    São Cristóvão - Rio de Janeiro - RJ CEP: 20940-010<br />
-    CNPJ: 24.492.300/0001-01<br/>
-    Telefone: (21) 3785 7000<br/>
-    www.itanet.com.br<br/></b>
-  </p>
-</header>
+<div class="header justify-between">
+  <div class="logo">
+    <img src="https://www.itanetbandalarga.com.br/img/logo-itanet.png">
+  </div>
+   <div class="description">
+    <p>
+        Rio de Janeiro- RJ, <%= data.current_date %><br/>
+        Empresa: Fiber Vox Telecomunicações<br/>
+        Endereço: Rua Antunes Maciel, 4999, <br/>
+        São Cristóvão - Rio de Janeiro - RJ CEP: 20940-010<br />
+        CNPJ: 24.492.300/0001-01<br/>
+        Telefone: (21) 3785 7000<br/>
+        www.itanet.com.br<br/>
+      </p>
+  </div>
+
+
+</div>
 <div class="client_name">
   <b>ORÇAMENTO - <%= data.client.name %></b>
 </div>
@@ -101,7 +140,6 @@
       </thead>
       <tbody>
       <% if(data.itens.length > 0){ %>
-
         <% data.itens.forEach((item,i) => { %>
           <tr>
             <td><%= i+1 %></td>
