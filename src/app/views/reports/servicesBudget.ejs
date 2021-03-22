@@ -4,7 +4,7 @@
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link href="https://unpkg.com/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
       <style>
          @media print{
          html, body, .page {
@@ -104,7 +104,7 @@
             <img src="https://www.itanetbandalarga.com.br/img/logo-itanet.png">
          </div>
          <div class="description">
-            <small class="text-xs">
+            <small class="small">
                Rio de Janeiro- RJ, <%= data.current_date %><br/>
                Empresa: Fiber Vox Telecomunicações<br/>
                Endereço: Rua Antunes Maciel, 4999, <br/>
@@ -116,13 +116,13 @@
          </div>
       </div>
       <div class="client_name ">
-         <b class="text-base">ORÇAMENTO - <%= data.client.name %></b>
+         <b class="h5 font-weight-bold">ORÇAMENTO - <%= data.client.name %></b>
       </div>
       <div class="client_address">
-         <b class="text-base"><%= data.address.label %></b>
+         <b class="h5 font-weight-bold"><%= data.address.label %></b>
       </div>
       <div>
-         <table class="text-xs">
+         <table class="h6">
             <thead>
                <tr>
                   <th width="5%">ITEM</th>
@@ -152,8 +152,8 @@
          </table>
       </div>
    </body>
-   <footer class="text-xs">
-      <p>
+   <footer>
+      <p class="small">
          Validade do Orçamento: 10 dias.<br/>
          Prazo de Instalação: Até 30 dias.<br/>
          Valor Mensal: Parcelas fixas de acordo com a data de vencimento.
