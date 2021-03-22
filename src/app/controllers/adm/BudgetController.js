@@ -61,10 +61,22 @@ class BudgetController {
     const budget = await Budget.findByPk(req.params.id, {
       include: [{ all: true }],
     });
-    const config = await Configuration.findByPk(1);
-    const { status_completed_sales_id } = config;
+    const config = await Configuration.findByPk(1, {
+      include: [
+        {
+          model: StatusBudget,
+          as: 'status_completed_sales',
+          attributes: ['id'],
+        },
+        {
+          model: StatusBudget,
+          as: 'status_analysis_budgets',
+          attributes: ['id'],
+        },
+      ],
+    });
 
-    if (!status_completed_sales_id) {
+    if (!config.status_completed_sales.id) {
       return res
         .status(400)
         .json({ error: 'O status de aprovação ainda não foi definido!.' });
@@ -75,7 +87,7 @@ class BudgetController {
     }
 
     await budget.update({
-      status_budget_id: status_completed_sales_id,
+      status_budget_id: config.status_completed_sales.id,
       update_for_id: req.userId,
     });
     const budget_updated = await Budget.findByPk(budget.id, {
@@ -105,7 +117,20 @@ class BudgetController {
   }
 
   async index(req, res) {
-    const { status_completed_sales_id } = await Configuration.findByPk(1);
+    const config = await Configuration.findByPk(1, {
+      include: [
+        {
+          model: StatusBudget,
+          as: 'status_completed_sales',
+          attributes: ['id'],
+        },
+        {
+          model: StatusBudget,
+          as: 'status_analysis_budgets',
+          attributes: ['id'],
+        },
+      ],
+    });
     const budgets = await Budget.findAll({
       include: [
         {
@@ -127,7 +152,10 @@ class BudgetController {
       ],
       order: [['created_at', 'DESC']],
     });
-    return res.json({ budgets, approved_status: status_completed_sales_id });
+    return res.json({
+      budgets,
+      approved_status: config.status_completed_sales.id,
+    });
   }
 
   async show(req, res) {
@@ -315,8 +343,21 @@ class BudgetController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validadion fails' });
     }
-    const config = await Configuration.findByPk(1);
-    const { status_completed_sales_id } = config;
+    const config = await Configuration.findByPk(1, {
+      include: [
+        {
+          model: StatusBudget,
+          as: 'status_completed_sales',
+          attributes: ['id'],
+        },
+        {
+          model: StatusBudget,
+          as: 'status_analysis_budgets',
+          attributes: ['id'],
+        },
+      ],
+    });
+    const { status_analysis_budgets } = config;
 
     const budget = await Budget.findByPk(req.body.id);
 
@@ -324,7 +365,6 @@ class BudgetController {
       return res.status(404).json({ error: 'Este orçamento não existe. ' });
     }
     const { status, address, velocity } = req.body;
-    const status_budget_id_database = budget.status_budget_id;
 
     await budget.update({
       velocity,
@@ -352,8 +392,8 @@ class BudgetController {
       ],
     });
     if (budget_updated) {
-      if (budget_updated.status_budget_id !== status_budget_id_database) {
-        if (budget_updated.status_budget_id !== status_completed_sales_id) {
+      if (budget_updated.status.id !== budget.status.id) {
+        if (budget_updated.status.id !== status_analysis_budgets.id) {
           if (budget_updated.gratification) {
             await budget_updated.setGratification(null);
             await Gratification.destroy({

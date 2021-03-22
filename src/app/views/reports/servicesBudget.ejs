@@ -157,8 +157,8 @@
              <td><%= item.unit %></td>
              <td><%= item.amount %></td>
              <td><%= item.description %></td>
-              <td><%= (item.unit_value) ? item.unit_value+' R$' : '-' %></td>
-              <td><%= (item.instalation_value) ? item.instalation_value+' R$' : '-' %></td>
+              <td><%= (item.unit_value) ? (item.unit_value === '0.00' ? '-' :  item.unit_value+' R$' ) : '-' %></td>
+              <td><%= (item.instalation_value) ? (item.instalation_value === '0.00' ? '-' :  item.instalation_value+' R$' ) : '-' %></td>
               <td><%= (item.contract_time) ? item.contract_time: '-' %></td>
           </tr>
         <%  }); %>
