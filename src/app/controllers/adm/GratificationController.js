@@ -78,7 +78,7 @@ class GratificationController {
 
   async store(req, res) {
     // data.payment_date = moment(data.payment_date).format("YYYY-MM-DD HH:mm:ss");
-
+    const created_for_id = req.userId;
     const schema = Yup.object().shape({
       budget_id: Yup.number().required(),
       payment: Yup.string().nullable().required(),
@@ -104,6 +104,7 @@ class GratificationController {
       payment,
       payment_date,
       delivery_date,
+      created_for_id,
     });
     if (gratification) {
       await budget_database.setGratification(gratification);

@@ -13,10 +13,12 @@ class GratificationController {
       where: { user_id: req.userId },
       include: [
         { model: StatusBudget, as: 'status', where: { deleted_at: null } },
+
         {
           model: Gratification,
           as: 'gratification',
           where: { deleted_at: null },
+          include: [{ model: User, as: 'created_for' }],
         },
         {
           model: User,
