@@ -14,6 +14,11 @@ class GratificationController {
       include: [
         { model: StatusBudget, as: 'status', where: { deleted_at: null } },
         {
+          model: Gratification,
+          as: 'gratification',
+          where: { deleted_at: null },
+        },
+        {
           model: User,
           as: 'user',
           attributes: ['id', 'name'],
@@ -31,11 +36,6 @@ class GratificationController {
               attributes: ['id', 'value', 'label', 'number'],
             },
           ],
-        },
-        {
-          model: Gratification,
-          as: 'gratification',
-          where: { deleted_at: null },
         },
       ],
       limit: Number.isNaN(limit) ? null : limit,
